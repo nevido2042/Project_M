@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Farmer 1
+  m_Controller: {fileID: 9100000, guid: 4aab22fc21302e649bb9eb6cf33e0094, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: 6d99f6708bc369849af5e5b726feb9fc, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 5342df9637f4fc640a8688bbe8a610e4, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 3473ba2ec5e0b1b48bc5a629d3efc16e, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: c7fc721551f761845be755c2380f7a51, type: 2}
