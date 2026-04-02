@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
-/// <summary>
-/// 플레이어의 체력, 경험치 및 레벨 상태를 관리하는 클래스
-/// </summary>
-public class Player : MonoBehaviour, IDamageable
+namespace Hero
 {
-    [Header("체력 설정")]
+    /// <summary>
+    /// 플레이어의 체력, 경험치 및 레벨 상태를 관리하는 클래스
+    /// </summary>
+    public class Player : MonoBehaviour, IDamageable
+    {
+        [Header("체력 설정")]
     [SerializeField] private float maxHealth = 100f;
     private float currentHealth;
 
@@ -18,6 +21,11 @@ public class Player : MonoBehaviour, IDamageable
     [Header("데미지 설정")]
     [SerializeField] private float invincibilityDuration = 0.5f; // 무적 지속 시간
     private bool isInvincible = false;
+    
+    // UI 및 상태 업데이트를 위한 이벤트 정의
+    public event Action<float, float> OnHealthChanged; // (current, max)
+    public event Action<float, float> OnExpChanged;    // (current, next)
+    public event Action<int> OnLevelChanged;          // (level)
 
     // 인터페이스 구현: 체력 정보
     public float CurrentHealth => currentHealth;
@@ -29,11 +37,19 @@ public class Player : MonoBehaviour, IDamageable
     public float NextExp => nextExp;
     public int Level => level;
 
-    private void Awake()
-    {
-        // 초기 체력 설정
-        currentHealth = maxHealth;
-    }
+        private void Awake()
+        {
+            // 초기 체력 설정 및 이벤트 발생
+            currentHealth = maxHealth;
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            OnExpChanged?.Invoke(currentExp, nextExp);
+            OnLevelChanged?.Invoke(level);
+        }
+
+        private void Update()
+        {
+            // 이동 입력 및 기타 업데이트 로직을 여기에 구현합니다.
+        }
 
     /// <summary>
     /// 경험치를 획득합니다.
@@ -48,6 +64,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             LevelUp();
         }
+
+        OnExpChanged?.Invoke(currentExp, nextExp);
     }
 
     /// <summary>
@@ -62,6 +80,7 @@ public class Player : MonoBehaviour, IDamageable
         nextExp = Mathf.Round(nextExp * 1.2f);
         
         Debug.Log($"레벨업! 현재 레벨: {level}, 다음 목표: {nextExp}");
+        OnLevelChanged?.Invoke(level);
     }
 
     public void TakeDamage(float damage)
@@ -69,6 +88,8 @@ public class Player : MonoBehaviour, IDamageable
         if (isInvincible || currentHealth <= 0) return;
 
         currentHealth -= damage;
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        
         StartCoroutine(InvincibilityRoutine());
 
         if (currentHealth <= 0)
@@ -84,8 +105,9 @@ public class Player : MonoBehaviour, IDamageable
         isInvincible = false;
     }
 
-    public void Die()
-    {
-        Debug.Log("플레이어가 사망했습니다!");
+        public void Die()
+        {
+            Debug.Log("플레이어가 사망했습니다!");
+        }
     }
 }

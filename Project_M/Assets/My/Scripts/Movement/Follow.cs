@@ -1,23 +1,25 @@
 using UnityEngine;
 
-/// <summary>
-/// 대상을 추적하여 이동하는 컴포넌트 (몬스터용)
-/// </summary>
-[RequireComponent(typeof(Rigidbody2D))]
-public class Follow : MonoBehaviour
+namespace Hero
 {
-    [Header("추적 설정")]
+    /// <summary>
+    /// 대상을 추적하여 이동하는 컴포넌트 (몬스터용)
+    /// </summary>
+    [RequireComponent(typeof(Rigidbody2D))]
+    public class Follow : MonoBehaviour
+    {
+        [Header("추적 설정")]
     [SerializeField] private float speed = 2f;          // 이동 속도
     [SerializeField] private Transform target;         // 추적 대상 (인스펙터에서 수동 할당 가능)
 
-    private Rigidbody2D rb;
-    private SpriteRenderer spriteRenderer;
+        private Rigidbody2D rb;
+        
 
-    private void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
+        private void Awake()
+        {
+            rb = GetComponent<Rigidbody2D>();
+            
+        }
 
     private void Start()
     {
@@ -39,15 +41,12 @@ public class Follow : MonoBehaviour
 
         // 플레이어 방향 벡터 및 이동 속도 계산
         Vector2 direction = (Vector2)target.position - rb.position;
-        Vector2 nextVec = direction.normalized * speed * Time.fixedDeltaTime;
+        
 
-        // 물리 엔진을 이용해 위치 이동 (관성 무시, 위치 직접 갱신)
-        rb.MovePosition(rb.position + nextVec);
+        // 물리 엔진의 속도(Velocity)를 직접 제어하여 Flip 컴포넌트와 호환되도록 합니다.
+            rb.linearVelocity = direction.normalized * speed;
 
-        // 시선 방향 전환 (Flip)
-        if (direction.x != 0)
-        {
-            spriteRenderer.flipX = direction.x < 0;
+            
         }
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro; // TextMeshPro가 없을 경우 일반 Text로 변경 가능
+using Hero;
 
 /// <summary>
 /// 화면에 고정된 메인 HUD (HP, EXP, Level)를 렌더링하는 View
@@ -24,36 +25,54 @@ public class PlayerHUDView : MonoBehaviour
             if (player != null)
             {
                 viewModel = new PlayerStatusViewModel(player);
+                SubscribeToViewModelEvents();
+                InitializeUI(); // 초기 상태 반영
             }
         }
     }
 
-    private void Update()
+    private void OnDestroy()
+    {
+        UnsubscribeFromViewModelEvents();
+    }
+
+    private void SubscribeToViewModelEvents()
     {
         if (viewModel == null) return;
-
-        // 1. 체력 업데이트
-        if (healthSlider != null)
-        {
-            healthSlider.value = viewModel.HealthRatio;
-        }
-
-        // 2. 경험치 업데이트
-        if (expSlider != null)
-        {
-            expSlider.value = viewModel.ExpRatio;
-        }
-
-        // 3. 레벨 텍스트 업데이트
-        if (levelText != null)
-        {
-            levelText.text = viewModel.LevelText;
-        }
-        
-        // 4. 사망 상태 시 시각적 반응 (필요 시 HUD를 빨갛게 하거나 숨기는 등)
-        if (viewModel.IsDead)
-        {
-            // 예: 캔버스 알파값을 낮추는 등의 로직 추가 가능
-        }
+        viewModel.OnHealthRatioChanged += UpdateHealthSlider;
+        viewModel.OnExpRatioChanged += UpdateExpSlider;
+        viewModel.OnLevelTextChanged += UpdateLevelText;
     }
+
+    private void UnsubscribeFromViewModelEvents()
+    {
+        if (viewModel == null) return;
+        viewModel.OnHealthRatioChanged -= UpdateHealthSlider;
+        viewModel.OnExpRatioChanged -= UpdateExpSlider;
+        viewModel.OnLevelTextChanged -= UpdateLevelText;
+    }
+
+    private void InitializeUI()
+    {
+        if (viewModel == null) return;
+        UpdateHealthSlider(viewModel.HealthRatio);
+        UpdateExpSlider(viewModel.ExpRatio);
+        UpdateLevelText(viewModel.LevelText);
+    }
+
+    private void UpdateHealthSlider(float ratio)
+    {
+        if (healthSlider != null) healthSlider.value = ratio;
+    }
+
+    private void UpdateExpSlider(float ratio)
+    {
+        if (expSlider != null) expSlider.value = ratio;
+    }
+
+    private void UpdateLevelText(string text)
+    {
+        if (levelText != null) levelText.text = text;
+    }
+
 }
