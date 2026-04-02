@@ -13,7 +13,9 @@ namespace Hero
         [SerializeField] private int count = 1;         // 무기 개수
         [SerializeField] private float radius = 2.0f;   // 플레이어 중심에서의 거리
 
+#if UNITY_EDITOR
         private bool isUpdatePending = false; // 에디터 지연 업데이트 중복 방지 플래그
+#endif
 
         private void Start()
         {
