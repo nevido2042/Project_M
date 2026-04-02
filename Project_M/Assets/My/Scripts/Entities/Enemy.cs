@@ -9,23 +9,48 @@ namespace Hero
     {
         
 
-        [Header("능력치 설정")]
-        [SerializeField] private float maxHealth = 10f;
-        [SerializeField] private float damageAmount = 10f; // 접촉 시 데미지 양
+        [Header("데이터 설정")]
+        [SerializeField] private EnemyData data; // 공통 능력치 데이터 에셋
         private float currentHealth;
+        private Move move;         // 이동 컴포넌트 참조
+        private UnityEngine.Pool.IObjectPool<Enemy> pool; // 자신을 관리하는 풀 참조
 
         private static Rigidbody2D playerRb;
         private static Transform playerTransform;
 
         // 인터페이스 구현: 체력 및 무적 정보
         public float CurrentHealth => currentHealth;
-        public float MaxHealth => maxHealth;
+        public float MaxHealth => data != null ? data.MaxHealth : 0f;
         public bool IsInvincible => false;
 
         private void Awake()
         {
-            // 초기 체력 설정
-            currentHealth = maxHealth;
+            move = GetComponent<Move>();
+
+            // 초기 체력 및 속도 설정
+            if (data != null)
+            {
+                currentHealth = data.MaxHealth;
+                if (move != null) move.Speed = data.MoveSpeed;
+            }
+        }
+
+        private void OnEnable()
+        {
+            // 풀에서 꺼내질 때 체력 및 속도 초기화
+            if (data != null)
+            {
+                currentHealth = data.MaxHealth;
+                if (move != null) move.Speed = data.MoveSpeed;
+            }
+        }
+
+        /// <summary>
+        /// 자신이 속한 풀을 설정합니다 (PoolManager에서 호출)
+        /// </summary>
+        public void SetPool(UnityEngine.Pool.IObjectPool<Enemy> pool)
+        {
+            this.pool = pool;
         }
 
         private void Start()
@@ -76,7 +101,7 @@ namespace Hero
             transform.position = spawnPos;
 
             // 재배치될 때 체력도 다시 채워줌 (재활용할 경우)
-            currentHealth = maxHealth;
+            if (data != null) currentHealth = data.MaxHealth;
         }
 
         /// <summary>
@@ -95,9 +120,22 @@ namespace Hero
 
         public void Die()
         {
-            // TODO: 몬스터 사망 효과 등을 구현합니다.
-            // 지금은 임시로 오브젝트를 비활성화합니다.
-            gameObject.SetActive(false);
+            // 몬스터 사망 시 경험치 아이템 생성
+            ExperienceItem expItem = PoolManager.Instance.GetExperienceItem();
+            if (expItem != null)
+            {
+                expItem.transform.position = transform.position;
+            }
+
+            // 풀 시스템을 사용할 경우 풀로 반납, 아니면 비활성화
+            if (pool != null)
+            {
+                pool.Release(this);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         /// <summary>
@@ -116,9 +154,9 @@ namespace Hero
                 // IDamageable 인터페이스를 찾아 데미지를 줍니다.
                 // 무적 여부 등은 플레이어 스크립트 내부에서 처리됩니다.
                 IDamageable hit = collision.gameObject.GetComponent<IDamageable>();
-                if (hit != null)
+                if (hit != null && data != null)
                 {
-                    hit.TakeDamage(damageAmount);
+                    hit.TakeDamage(data.DamageAmount);
                 }
             }
         }

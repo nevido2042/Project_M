@@ -6,6 +6,7 @@ namespace Hero
     public class Move : MonoBehaviour
     {
         [SerializeField] private float speed = 5f;
+        public float Speed { get => speed; set => speed = value; }
 
         private Rigidbody2D rb;
         public Vector2 Velocity { get; set; }
