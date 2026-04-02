@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 5032330}
   - component: {fileID: 5032329}
   - component: {fileID: 5032328}
+  - component: {fileID: 5032331}
   - component: {fileID: 5032327}
   m_Layer: 0
   m_Name: Tilemap (5)
@@ -212,7 +213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &5032329
 TilemapRenderer:
   serializedVersion: 2
@@ -1341,6 +1341,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &5032331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5032325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1 &50941439
 GameObject:
   m_ObjectHideFlags: 0
@@ -1358,9 +1371,10 @@ GameObject:
   - component: {fileID: 50941448}
   - component: {fileID: 50941447}
   - component: {fileID: 50941449}
+  - component: {fileID: 50941450}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Area
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1436,7 +1450,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 837887200}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &50941443
@@ -1538,8 +1553,8 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!61 &50941449
-BoxCollider2D:
+--- !u!58 &50941449
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1568,22 +1583,26 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1.1111112}
-    newSize: {x: 1, y: 1.1111112}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 25, y: 25}
-  m_EdgeRadius: 0
+  m_Radius: 0.5555556
+--- !u!114 &50941450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50941439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c8f81c6f8583794a922f92c9cd87042, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  maxHealth: 100
+  invincibilityDuration: 0.5
 --- !u!1 &106060497
 GameObject:
   m_ObjectHideFlags: 0
@@ -1596,6 +1615,7 @@ GameObject:
   - component: {fileID: 106060502}
   - component: {fileID: 106060501}
   - component: {fileID: 106060500}
+  - component: {fileID: 106060503}
   - component: {fileID: 106060499}
   m_Layer: 0
   m_Name: Tilemap (4)
@@ -1677,7 +1697,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &106060501
 TilemapRenderer:
   serializedVersion: 2
@@ -2806,6 +2825,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &106060503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106060497}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1 &259013649
 GameObject:
   m_ObjectHideFlags: 0
@@ -2918,6 +2950,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1595071556}
+  - {fileID: 988735438}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3013,6 +3046,7 @@ GameObject:
   - component: {fileID: 364414955}
   - component: {fileID: 364414954}
   - component: {fileID: 364414953}
+  - component: {fileID: 364414956}
   - component: {fileID: 364414952}
   m_Layer: 0
   m_Name: Tilemap (3)
@@ -3094,7 +3128,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &364414954
 TilemapRenderer:
   serializedVersion: 2
@@ -4223,6 +4256,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &364414956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 364414950}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1 &400231495
 GameObject:
   m_ObjectHideFlags: 0
@@ -4312,6 +4358,12 @@ GameObject:
   m_Component:
   - component: {fileID: 432355996}
   - component: {fileID: 432355995}
+  - component: {fileID: 432355998}
+  - component: {fileID: 432355999}
+  - component: {fileID: 432356000}
+  - component: {fileID: 432356002}
+  - component: {fileID: 432356003}
+  - component: {fileID: 432355997}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -4393,6 +4445,131 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &432355997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432355994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6a737988a3dede42af72b6d3f53cea8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Follow
+  speed: 2
+  target: {fileID: 0}
+--- !u!50 &432355998
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432355994}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
+--- !u!58 &432355999
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432355994}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
+--- !u!95 &432356000
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432355994}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f2855d618fc8d9c499189d3f39b9cbbc, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &432356002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432355994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Reposition
+--- !u!114 &432356003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432355994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc92c7e959e28e04a830669de50f95df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyReposition
+  maxHealth: 10
+  damageAmount: 10
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -4630,6 +4807,248 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &837887199
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 837887200}
+  - component: {fileID: 837887201}
+  m_Layer: 0
+  m_Name: Area
+  m_TagString: Area
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &837887200
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837887199}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 50941441}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &837887201
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837887199}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1.1111112}
+    newSize: {x: 1, y: 1.1111112}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 20, y: 20}
+  m_EdgeRadius: 0
+--- !u!1 &976023908
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 976023909}
+  - component: {fileID: 976023911}
+  - component: {fileID: 976023910}
+  m_Layer: 5
+  m_Name: Fill
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &976023909
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976023908}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1310763000}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &976023910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976023908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 1312383074, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &976023911
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 976023908}
+  m_CullTransparentMesh: 1
+--- !u!1 &988735437
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 988735438}
+  - component: {fileID: 988735439}
+  m_Layer: 5
+  m_Name: EXP
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &988735438
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988735437}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1370732790}
+  - {fileID: 1310763000}
+  m_Father: {fileID: 259013654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 20}
+  m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &988735439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988735437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+  m_Navigation:
+    m_Mode: 0
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 0
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 0
+  m_TargetGraphic: {fileID: 0}
+  m_FillRect: {fileID: 976023909}
+  m_HandleRect: {fileID: 0}
+  m_Direction: 0
+  m_MinValue: 0
+  m_MaxValue: 1
+  m_WholeNumbers: 0
+  m_Value: 0.838
+  m_OnValueChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1308779102
 GameObject:
   m_ObjectHideFlags: 0
@@ -4705,6 +5124,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1308779102}
   m_CullTransparentMesh: 1
+--- !u!1 &1310762999
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1310763000}
+  m_Layer: 5
+  m_Name: Fill Area
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1310763000
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310762999}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 976023909}
+  m_Father: {fileID: 988735438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1320567867
 GameObject:
   m_ObjectHideFlags: 0
@@ -4717,6 +5172,7 @@ GameObject:
   - component: {fileID: 1320567872}
   - component: {fileID: 1320567871}
   - component: {fileID: 1320567870}
+  - component: {fileID: 1320567873}
   - component: {fileID: 1320567869}
   m_Layer: 0
   m_Name: Tilemap (7)
@@ -4798,7 +5254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &1320567871
 TilemapRenderer:
   serializedVersion: 2
@@ -5927,6 +6382,94 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1320567873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1320567867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
+--- !u!1 &1370732789
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1370732790}
+  - component: {fileID: 1370732792}
+  - component: {fileID: 1370732791}
+  m_Layer: 5
+  m_Name: Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1370732790
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370732789}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 988735438}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1370732791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370732789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -1010605625, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1370732792
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370732789}
+  m_CullTransparentMesh: 1
 --- !u!1 &1376507661
 GameObject:
   m_ObjectHideFlags: 0
@@ -6068,6 +6611,7 @@ GameObject:
   - component: {fileID: 1775476475}
   - component: {fileID: 1775476474}
   - component: {fileID: 1775476473}
+  - component: {fileID: 1775476476}
   - component: {fileID: 1775476472}
   m_Layer: 0
   m_Name: Tilemap (2)
@@ -6149,7 +6693,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &1775476474
 TilemapRenderer:
   serializedVersion: 2
@@ -7278,6 +7821,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1775476476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775476470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1 &1910539049
 GameObject:
   m_ObjectHideFlags: 0
@@ -7290,6 +7846,7 @@ GameObject:
   - component: {fileID: 1910539054}
   - component: {fileID: 1910539053}
   - component: {fileID: 1910539052}
+  - component: {fileID: 1910539055}
   - component: {fileID: 1910539051}
   m_Layer: 0
   m_Name: Tilemap (8)
@@ -7371,7 +7928,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &1910539053
 TilemapRenderer:
   serializedVersion: 2
@@ -8500,6 +9056,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1910539055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1910539049}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1 &1943959801
 GameObject:
   m_ObjectHideFlags: 0
@@ -8512,6 +9081,7 @@ GameObject:
   - component: {fileID: 1943959806}
   - component: {fileID: 1943959805}
   - component: {fileID: 1943959804}
+  - component: {fileID: 1943959807}
   - component: {fileID: 1943959803}
   m_Layer: 0
   m_Name: Tilemap (6)
@@ -8593,7 +9163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &1943959805
 TilemapRenderer:
   serializedVersion: 2
@@ -9722,6 +10291,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &1943959807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943959801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1 &2101593551
 GameObject:
   m_ObjectHideFlags: 0
@@ -9734,6 +10316,7 @@ GameObject:
   - component: {fileID: 2101593556}
   - component: {fileID: 2101593555}
   - component: {fileID: 2101593554}
+  - component: {fileID: 2101593557}
   - component: {fileID: 2101593553}
   m_Layer: 0
   m_Name: Tilemap (1)
@@ -9815,7 +10398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!483693784 &2101593555
 TilemapRenderer:
   serializedVersion: 2
@@ -10944,6 +11526,19 @@ Tilemap:
     e31: 0
     e32: 0
     e33: 1
+--- !u!114 &2101593557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101593551}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1 &2145289339
 GameObject:
   m_ObjectHideFlags: 0
@@ -10956,6 +11551,7 @@ GameObject:
   - component: {fileID: 2145289342}
   - component: {fileID: 2145289341}
   - component: {fileID: 2145289343}
+  - component: {fileID: 2145289345}
   - component: {fileID: 2145289344}
   m_Layer: 0
   m_Name: Tilemap
@@ -12119,7 +12715,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07259505ee358e48b319d0bc1fb062f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Reposition
-  tileSize: 10
 --- !u!61 &2145289344
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12166,6 +12761,19 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 10, y: 10}
   m_EdgeRadius: 0
+--- !u!114 &2145289345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2145289339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434b371b5295e7e428543bdfa3e02ac4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapReposition
+  tileSize: 10
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
