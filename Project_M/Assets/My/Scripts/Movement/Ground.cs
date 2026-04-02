@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// 맵 타일 재배치를 담당하는 클래스
 /// </summary>
-public class MapReposition : MonoBehaviour, IRepositionable
+public class Ground : MonoBehaviour, IRepositionable
 {
     [SerializeField] private float tileSize = 10f; // 타일 한 칸의 크기
     private static Transform playerTransform;
