@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 6964392946655665030}
   - component: {fileID: 28053847313694205}
   - component: {fileID: 1228972657471745024}
+  - component: {fileID: 1843478773952221300}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -234,3 +235,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hero.Chase
   target: {fileID: 0}
+--- !u!114 &1843478773952221300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4475037142795785458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0a7e764f0d2b3245981c9dc0a75de6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.Reposition

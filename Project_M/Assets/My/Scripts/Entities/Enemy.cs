@@ -15,9 +15,6 @@ namespace Hero
         private Move move;         // 이동 컴포넌트 참조
         private UnityEngine.Pool.IObjectPool<Enemy> pool; // 자신을 관리하는 풀 참조
 
-        private static Rigidbody2D playerRb;
-        private static Transform playerTransform;
-
         // 인터페이스 구현: 체력 및 무적 정보
         public float CurrentHealth => currentHealth;
         public float MaxHealth => data != null ? data.MaxHealth : 0f;
@@ -55,43 +52,14 @@ namespace Hero
 
         private void Start()
         {
-            // 정적 변수에 플레이어 정보 캐싱 (효율적 참조)
-            if (playerTransform == null)
-            {
-                GameObject player = GameObject.FindGameObjectWithTag("Player");
-                if (player != null)
-                {
-                    playerTransform = player.transform;
-                    playerRb = player.GetComponent<Rigidbody2D>();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 플레이어의 영역(Area)을 벗어날 때 재배치를 수행합니다.
-        /// </summary>
-        private void OnTriggerExit2D(Collider2D collision)
-        {
-            // "Area" 태그를 가진 트리거를 벗어날 때 실행
-            if (!collision.CompareTag("Area")) return;
-
-            if (playerTransform != null)
-            {
-                // 인터페이스를 상속받은 자기 자신의 재배치 로직을 호출합니다.
-                Reposition(playerTransform.position);
-            }
+            // 이제 플레이어 정보 캐싱은 Reposition 컴포넌트에서 통합 관리합니다.
         }
 
         /// <summary>
         /// 플레이어의 위치와 진행 방향을 계산하여 적을 앞쪽 구역에 재배치합니다.
         /// </summary>
-        public void Reposition(Vector3 playerPos)
+        public void Reposition(Vector3 playerPos, Vector2 playerDir)
         {
-            if (playerTransform == null) return;
-
-            // 플레이어의 이동 방향(속도) 확인
-            Vector2 playerDir = (playerRb != null) ? playerRb.linearVelocity : Vector2.zero;
-
             // 재배치 거리 및 랜덤 오프셋 계산
             float range = 20f;
             Vector3 spawnPos = playerPos + (Vector3)(playerDir.normalized * range);
