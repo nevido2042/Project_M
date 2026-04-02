@@ -13,17 +13,8 @@ namespace Hero
         [SerializeField] private float minDistance = 10f; // 최소 스폰 거리 (화면 밖)
         [SerializeField] private float maxDistance = 15f; // 최대 스폰 거리
 
-        private Transform playerTransform;
-
         private void Start()
         {
-            // 플레이어 태그로 위치 추적 시작
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            if (player != null)
-            {
-                playerTransform = player.transform;
-            }
-
             // 스폰 코루틴 시작
             StartCoroutine(SpawnRoutine());
         }
@@ -33,7 +24,8 @@ namespace Hero
             // 게임 내내 반복
             while (true)
             {
-                if (playerTransform != null)
+                // GameManager와 플레이어가 존재할 때만 스폰
+                if (GameManager.Instance != null && GameManager.Instance.Player != null)
                 {
                     Spawn();
                 }
@@ -45,8 +37,10 @@ namespace Hero
 
         private void Spawn()
         {
-            // 1. PoolManager를 통해 풀에서 적 오브젝트를 가져옴
-            Enemy enemy = PoolManager.Instance.GetEnemy();
+            // 1. GameManager를 통해 풀에서 적 오브젝트를 가져옴
+            if (GameManager.Instance == null || GameManager.Instance.Pool == null) return;
+            
+            Enemy enemy = GameManager.Instance.Pool.GetEnemy();
             if (enemy == null) return;
 
             // 2. 랜덤한 방향 및 거리 계산 (원형 좌표계 활용)
@@ -60,8 +54,9 @@ namespace Hero
                 0f
             );
 
-            // 3. 플레이어 기준 상대적 위치로 설정
-            enemy.transform.position = playerTransform.position + spawnPos;
+            // 3. GameManager가 제공하는 플레이어 기준 상대적 위치로 설정
+            Transform playerTsn = GameManager.Instance.Player.transform;
+            enemy.transform.position = playerTsn.position + spawnPos;
         }
     }
 }

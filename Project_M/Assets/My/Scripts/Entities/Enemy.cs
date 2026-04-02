@@ -88,11 +88,14 @@ namespace Hero
 
         public void Die()
         {
-            // 몬스터 사망 시 경험치 아이템 생성
-            ExperienceItem expItem = PoolManager.Instance.GetExperienceItem();
-            if (expItem != null)
+            // GameManager를 통해 풀 시스템에서 경험치 아이템 생성
+            if (GameManager.Instance != null && GameManager.Instance.Pool != null)
             {
-                expItem.transform.position = transform.position;
+                ExperienceItem expItem = GameManager.Instance.Pool.GetExperienceItem();
+                if (expItem != null)
+                {
+                    expItem.transform.position = transform.position;
+                }
             }
 
             // 풀 시스템을 사용할 경우 풀로 반납, 아니면 비활성화

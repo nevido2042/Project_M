@@ -13,14 +13,10 @@ namespace Hero
 
         private void Start()
         {
-            // 플레이어 자동 검색 (할당되지 않았을 경우)
-            if (player == null)
+            // 이제 플레이어 정보는 GameManager를 통해 중앙 집중형으로 관리합니다.
+            if (GameManager.Instance != null)
             {
-                GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-                if (playerObj != null)
-                {
-                    player = playerObj.GetComponent<Player>();
-                }
+                player = GameManager.Instance.Player;
             }
 
             // 이벤트 구독
