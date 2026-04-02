@@ -39,9 +39,23 @@ public class Enemy : MonoBehaviour, IRepositionable, IDamageable
     }
 
     /// <summary>
+    /// 플레이어의 영역(Area)을 벗어날 때 재배치를 수행합니다.
+    /// </summary>
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        // "Area" 태그를 가진 트리거를 벗어날 때 실행
+        if (!collision.CompareTag("Area")) return;
+
+        if (playerTransform != null)
+        {
+            // 인터페이스를 상속받은 자기 자신의 재배치 로직을 호출합니다.
+            Reposition(playerTransform.position);
+        }
+    }
+
+    /// <summary>
     /// 플레이어의 위치와 진행 방향을 계산하여 적을 앞쪽 구역에 재배치합니다.
     /// </summary>
-    /// <param name="playerPos">플레이어의 현재 위치</param>
     public void Reposition(Vector3 playerPos)
     {
         if (playerTransform == null) return;
