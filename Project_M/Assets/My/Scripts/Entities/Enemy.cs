@@ -7,12 +7,12 @@ namespace Hero
     /// </summary>
     public class Enemy : MonoBehaviour, IRepositionable, IDamageable
     {
-        
-
         [Header("데이터 설정")]
         [SerializeField] private EnemyData data; // 공통 능력치 데이터 에셋
         private float currentHealth;
         private Move move;         // 이동 컴포넌트 참조
+        private IKnockbackable knockbackable; // 넉백 인터페이스 추가
+        private DamageFlash damageFlash;      // 데미지 깜빡임 추가
         private UnityEngine.Pool.IObjectPool<Enemy> pool; // 자신을 관리하는 풀 참조
 
         // 인터페이스 구현: 체력 및 무적 정보
@@ -23,6 +23,8 @@ namespace Hero
         private void Awake()
         {
             move = GetComponent<Move>();
+            knockbackable = GetComponent<IKnockbackable>();
+            damageFlash = GetComponent<DamageFlash>();
 
             // 초기 체력 및 속도 설정
             if (data != null)
@@ -76,9 +78,37 @@ namespace Hero
         /// 몬스터에게 데미지를 입힙니다.
         /// </summary>
         /// <param name="damage">입힐 데미지 양</param>
-        public void TakeDamage(float damage)
+        /// <param name="damageSourcePos">데미지를 준 원점 (넉백 방향 계산용)</param>
+        public void TakeDamage(float damage, Vector2? damageSourcePos = null)
         {
             currentHealth -= damage;
+
+            // 깜빡임 효과 실행
+            if (damageFlash != null) damageFlash.CallFlash();
+
+            // 넉백 적용
+            if (knockbackable != null)
+            {
+                Vector2 dir;
+                if (damageSourcePos.HasValue)
+                {
+                    dir = ((Vector2)transform.position - damageSourcePos.Value).normalized;
+                }
+                else if (GameManager.Instance != null && GameManager.Instance.Player != null)
+                {
+                    dir = (transform.position - GameManager.Instance.Player.transform.position).normalized;
+                }
+                else
+                {
+                    dir = Vector2.zero;
+                }
+
+                if (dir != Vector2.zero)
+                {
+                    // 인터페이스를 통한 넉백 실행
+                    knockbackable.ApplyKnockBack(dir);
+                }
+            }
 
             if (currentHealth <= 0)
             {
@@ -110,11 +140,6 @@ namespace Hero
         }
 
         /// <summary>
-        
-        /// </summary>
-
-
-        /// <summary>
         /// 플레이어와 접촉 중일 때 데미지를 입힘
         /// </summary>
         private void OnCollisionStay2D(Collision2D collision)
@@ -123,11 +148,11 @@ namespace Hero
             if (collision.gameObject.CompareTag("Player"))
             {
                 // IDamageable 인터페이스를 찾아 데미지를 줍니다.
-                // 무적 여부 등은 플레이어 스크립트 내부에서 처리됩니다.
                 IDamageable hit = collision.gameObject.GetComponent<IDamageable>();
                 if (hit != null && data != null)
                 {
-                    hit.TakeDamage(data.DamageAmount);
+                    // 자신의 위치를 함께 넘겨 플레이어가 반대 방향으로 넉백되도록 함
+                    hit.TakeDamage(data.DamageAmount, transform.position);
                 }
             }
         }

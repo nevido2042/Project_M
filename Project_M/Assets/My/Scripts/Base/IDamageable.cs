@@ -22,7 +22,7 @@ public interface IDamageable
     /// 대상에게 데미지를 입힙니다.
     /// </summary>
     /// <param name="damage">입힐 데미지 양</param>
-    void TakeDamage(float damage);
+    void TakeDamage(float damage, UnityEngine.Vector2? damageSourcePos = null);
 
     /// <summary>
     /// 대상이 사망했을 때 호출되는 메서드입니다.
