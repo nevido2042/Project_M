@@ -39,12 +39,6 @@ namespace Hero
         {
             health = GetComponent<PlayerHealth>();
             
-            // 기존 이벤트 연동: 사망 시 플레이어의 Die 호출
-            if (health != null)
-            {
-                health.OnDeath += Die;
-            }
-
             // 초기 상태 알림
             OnExpChanged?.Invoke(currentExp, nextExp);
             OnLevelChanged?.Invoke(level);
@@ -87,17 +81,8 @@ namespace Hero
             OnLevelChanged?.Invoke(level);
         }
 
-        public void Die()
-        {
-            Debug.Log("플레이어가 사망했습니다!");
-        }
-
         private void OnDestroy()
         {
-            if (health != null)
-            {
-                health.OnDeath -= Die;
-            }
         }
     }
 }

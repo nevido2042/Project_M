@@ -6,7 +6,7 @@ namespace Hero
     /// <summary>
     /// 플레이어가 획득할 수 있는 경험치 아이템
     /// </summary>
-    public class ExperienceItem : MonoBehaviour
+    public class ExperienceItem : MonoBehaviour, IPoolable
     {
         [SerializeField] private float expValue = 10f; // 제공할 경험치 양
         private IObjectPool<ExperienceItem> pool;
@@ -30,12 +30,16 @@ namespace Hero
                 if (player != null)
                 {
                     player.GetExp(expValue);
+                    
+                    if (GameManager.Instance?.Audio != null)
+                        GameManager.Instance.Audio.PlaySFX(SfxType.Collect);
+
                     Release(); // 풀로 반납
                 }
             }
         }
 
-        private void Release()
+        public void Release()
         {
             if (pool != null)
             {

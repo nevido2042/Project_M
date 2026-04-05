@@ -43,15 +43,6 @@ namespace Hero
         public void Show(Player targetPlayer)
         {
             player = targetPlayer;
-            
-            // 0. 캐싱된 조이스틱 비활성화 (클릭 간섭 방지)
-            if (joysticks != null)
-            {
-                foreach (var joy in joysticks)
-                {
-                    if (joy != null) joy.gameObject.SetActive(false);
-                }
-            }
 
             // 1. 아직 강화 가능한 항목들만 필터링 (최대 레벨 제외)
             var availableUpgrades = allUpgrades.Where(u => u.CanUpgrade).ToList();
@@ -82,6 +73,15 @@ namespace Hero
             // 4. UI 및 게임 일시정지 처리
             uiPanel.SetActive(true);
             Time.timeScale = 0f; // 게임 일시정지
+
+            // 0. 캐싱된 조이스틱 비활성화 (클릭 간섭 방지)
+            if (joysticks != null)
+            {
+                foreach (var joy in joysticks)
+                {
+                    if (joy != null) joy.gameObject.SetActive(false);
+                }
+            }
         }
 
         /// <summary>

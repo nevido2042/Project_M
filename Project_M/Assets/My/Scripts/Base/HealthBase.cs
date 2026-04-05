@@ -40,6 +40,10 @@ namespace Hero
             // 공통 시각 효과: 깜빡임
             if (damageFlash != null) damageFlash.CallFlash();
 
+            // 공통 사운드 효과
+            if (GameManager.Instance?.Audio != null)
+                GameManager.Instance.Audio.PlaySFX(SfxType.Hit);
+
             // 공통 물리 효과: 넉백
             ApplyKnockBackEffect(damageSourcePos);
 
@@ -66,6 +70,9 @@ namespace Hero
         /// </summary>
         public virtual void Die()
         {
+            if (GameManager.Instance?.Audio != null)
+                GameManager.Instance.Audio.PlaySFX(SfxType.Die);
+            
             OnDeath?.Invoke();
         }
 

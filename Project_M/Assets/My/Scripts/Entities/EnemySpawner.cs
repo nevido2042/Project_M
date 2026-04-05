@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -12,6 +13,9 @@ namespace Hero
         [SerializeField] private float spawnTime = 1.0f; // 스폰 시간 간격
         [SerializeField] private float minDistance = 10f; // 최소 스폰 거리 (화면 밖)
         [SerializeField] private float maxDistance = 15f; // 최대 스폰 거리
+        
+        public int KillCount { get; private set; }
+        public event Action<int> OnKillCountChanged;
 
         private void Start()
         {
@@ -44,8 +48,8 @@ namespace Hero
             if (enemy == null) return;
 
             // 2. 랜덤한 방향 및 거리 계산 (원형 좌표계 활용)
-            float angle = Random.Range(0f, 360f);
-            float distance = Random.Range(minDistance, maxDistance);
+            float angle = UnityEngine.Random.Range(0f, 360f);
+            float distance = UnityEngine.Random.Range(minDistance, maxDistance);
 
             float rad = angle * Mathf.Deg2Rad;
             Vector3 spawnPos = new Vector3(
@@ -57,6 +61,15 @@ namespace Hero
             // 3. GameManager가 제공하는 플레이어 기준 상대적 위치로 설정
             Transform playerTsn = GameManager.Instance.Player.transform;
             enemy.transform.position = playerTsn.position + spawnPos;
+        }
+
+        /// <summary>
+        /// 킬 수를 증가시키고 이벤트를 발생시킵니다.
+        /// </summary>
+        public void AddKill()
+        {
+            KillCount++;
+            OnKillCountChanged?.Invoke(KillCount);
         }
     }
 }

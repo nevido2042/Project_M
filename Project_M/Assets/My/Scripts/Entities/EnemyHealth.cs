@@ -1,26 +1,46 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Hero
 {
     /// <summary>
     /// 몬스터 전용 체력 관리 컴포넌트
     /// </summary>
-    public class EnemyHealth : HealthBase
+    public class EnemyHealth : HealthBase, IPoolable
     {
         [Header("몬스터 데이터")]
         [SerializeField] private EnemyData data;
 
-        public override bool IsInvincible => false;
+        private IObjectPool<Enemy> pool;
+        private Enemy enemy;
+        private Animator anim;
+        private Collider2D enemyCollider;
+        private Move move;
+        private Chase chase;
+        private bool isDead = false;
+
+        public bool IsDead => isDead;
+        public override bool IsInvincible => isDead;
 
         protected override void Awake()
         {
-            // 부모 Awake가 maxHealth로 currentHealth를 초기화하기 전에
-            // 데이터로부터 maxHealth를 먼저 설정함
             if (data != null)
             {
                 maxHealth = data.MaxHealth;
             }
             base.Awake();
+
+            enemy = GetComponent<Enemy>();
+            anim = GetComponent<Animator>();
+            enemyCollider = GetComponent<Collider2D>();
+            move = GetComponent<Move>();
+            chase = GetComponent<Chase>();
+        }
+
+        public void SetPool(IObjectPool<Enemy> pool)
+        {
+            this.pool = pool;
         }
 
         private void OnEnable()
@@ -30,6 +50,67 @@ namespace Hero
             {
                 maxHealth = data.MaxHealth;
                 currentHealth = maxHealth;
+            }
+            isDead = false;
+        }
+
+        public override void Die()
+        {
+            if (isDead) return;
+            base.Die(); // 사운드 및 OnDeath 호출
+            StartCoroutine(DieRoutine());
+        }
+
+        private IEnumerator DieRoutine()
+        {
+            isDead = true;
+
+            // 컴포넌트 비활성화
+            if (enemyCollider != null) enemyCollider.enabled = false;
+            if (move != null)
+            {
+                move.Velocity = Vector2.zero;
+                move.enabled = false;
+            }
+            if (chase != null) chase.enabled = false;
+
+            // 즉시 속도 정지
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
+
+            // 사망 애니메이션
+            if (anim != null) anim.SetBool("Dead", true);
+
+            // 킬 수 증가
+            if (GameManager.Instance != null && GameManager.Instance.Spawner != null)
+            {
+                GameManager.Instance.Spawner.AddKill();
+            }
+
+            yield return new WaitForSeconds(1.0f);
+
+            // 레벨업 시 경험치 생성
+            if (GameManager.Instance != null && GameManager.Instance.Pool != null)
+            {
+                ExperienceItem expItem = GameManager.Instance.Pool.GetExperienceItem();
+                if (expItem != null)
+                {
+                    expItem.transform.position = transform.position;
+                }
+            }
+
+            Release();
+        }
+
+        public void Release()
+        {
+            if (pool != null)
+            {
+                pool.Release(enemy);
+            }
+            else
+            {
+                gameObject.SetActive(false);
             }
         }
 

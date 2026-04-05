@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 namespace Hero
@@ -6,7 +5,7 @@ namespace Hero
     /// <summary>
     /// 몬스터의 전체적인 행동을 관리하는 클래스 (체력은 EnemyHealth에서 담당)
     /// </summary>
-    public class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour, IPoolable
     {
         [Header("데이터 설정")]
         [SerializeField] private EnemyData data; // 공통 능력치 데이터 에셋
@@ -15,15 +14,12 @@ namespace Hero
         private EnemyHealth health; // 체력 컴포넌트 참조
         private Animator anim;                // 애니메이터 추가
         private Collider2D enemyCollider;     // 콜라이더 추가
-        private UnityEngine.Pool.IObjectPool<Enemy> pool; // 자신을 관리하는 풀 참조
-
-        private bool isDead = false;          // 사망 상태 플래그
 
         // 체력 및 무적 정보 프로퍼티 (기존 호환성 유지)
         public float CurrentHealth => health != null ? health.CurrentHealth : 0f;
         public float MaxHealth => health != null ? health.MaxHealth : 0f;
-        public bool IsDead => isDead; // 사망 상태 외부 노출
-        public bool IsInvincible => isDead; // 죽는 중에는 무적 판정
+        public bool IsDead => health != null && health.IsDead; // EnemyHealth에서 상태 가져옴
+        public bool IsInvincible => health != null && health.IsInvincible; 
 
         private void Awake()
         {
@@ -32,12 +28,6 @@ namespace Hero
             health = GetComponent<EnemyHealth>();
             anim = GetComponent<Animator>();
             enemyCollider = GetComponent<Collider2D>();
-
-            // 초기 신호 연동
-            if (health != null)
-            {
-                health.OnDeath += Die;
-            }
 
             // 속도 초기화
             if (data != null && move != null)
@@ -48,14 +38,11 @@ namespace Hero
 
         private void OnEnable()
         {
-            // 상태 초기화
-            isDead = false;
+            // 기본적인 활성화 상태만 보장 (상세한 체력/사망 상태는 EnemyHealth에서 관리)
             if (enemyCollider != null) enemyCollider.enabled = true;
             if (move != null) move.enabled = true;
             if (chase != null) chase.enabled = true;
             if (anim != null) anim.SetBool("Dead", false);
-            
-            // 데이터 연동은 EnemyHealth의 OnEnable에서 처리함
         }
 
         /// <summary>
@@ -63,7 +50,7 @@ namespace Hero
         /// </summary>
         public void SetPool(UnityEngine.Pool.IObjectPool<Enemy> pool)
         {
-            this.pool = pool;
+            if (health != null) health.SetPool(pool);
         }
 
         private void Start()
@@ -72,62 +59,12 @@ namespace Hero
         }
 
 
-        public void Die()
-        {
-            if (isDead) return;
-            StartCoroutine(DieRoutine());
-        }
-
-        private IEnumerator DieRoutine()
-        {
-            isDead = true;
-
-            // 콜라이더 및 이동/AI 비활성화
-            if (enemyCollider != null) enemyCollider.enabled = false;
-            if (move != null)
-            {
-                move.Velocity = Vector2.zero; // 방향 초기화
-                move.enabled = false;
-            }
-            if (chase != null) chase.enabled = false;
-            
-            // 즉시 속도 정지 (관성 제거)
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-            if (rb != null) rb.linearVelocity = Vector2.zero;
-
-            // 사망 애니메이션 실행 (Bool 파라미터 사용)
-            if (anim != null) anim.SetBool("Dead", true);
-
-            // 애니메이션이 충분히 재생될 시간 대기 (약 1초)
-            yield return new WaitForSeconds(1.0f);
-
-            // GameManager를 통해 풀 시스템에서 경험치 아이템 생성
-            if (GameManager.Instance != null && GameManager.Instance.Pool != null)
-            {
-                ExperienceItem expItem = GameManager.Instance.Pool.GetExperienceItem();
-                if (expItem != null)
-                {
-                    expItem.transform.position = transform.position;
-                }
-            }
-
-            // 풀 시스템을 사용할 경우 풀로 반납, 아니면 비활성화
-            if (pool != null)
-            {
-                pool.Release(this);
-            }
-            else
-            {
-                gameObject.SetActive(false);
-            }
-        }
-
         /// <summary>
         /// 플레이어와 접촉 중일 때 데미지를 입힘
         /// </summary>
         private void OnCollisionStay2D(Collision2D collision)
         {
-            if (isDead) return; // 사망 중엔 충돌 판정 제외
+            if (IsDead) return; // 사망 중엔 충돌 판정 제외
 
             // 충돌 대상이 플레이어 태그를 가지고 있다면
             if (collision.gameObject.CompareTag("Player"))
@@ -142,12 +79,12 @@ namespace Hero
             }
         }
 
-        private void OnDestroy()
+        /// <summary>
+        /// 풀로 반납합니다 (IPoolable 인터페이스 구현)
+        /// </summary>
+        public void Release()
         {
-            if (health != null)
-            {
-                health.OnDeath -= Die;
-            }
+            if (health != null) health.Release();
         }
     }
 }

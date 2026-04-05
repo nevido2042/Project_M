@@ -12,8 +12,10 @@ public class PlayerHUDView : MonoBehaviour
     [SerializeField] private Slider healthSlider; // 체력 슬라이더
     [SerializeField] private Slider expSlider;    // 경험치 슬라이더
     [SerializeField] private TextMeshProUGUI levelText; // 레벨 텍스트
+    [SerializeField] private TextMeshProUGUI killCountText; // 킬 수 텍스트
 
     private PlayerStatusViewModel viewModel;
+    private KillCountViewModel killCountViewModel;
 
     private void Start()
     {
@@ -29,11 +31,25 @@ public class PlayerHUDView : MonoBehaviour
                 InitializeUI(); // 초기 상태 반영
             }
         }
+
+        // 킬 카운트 뷰모델 초기화 (EnemySpawner는 싱글톤 GameManager를 통해 접근)
+        if (GameManager.Instance != null && GameManager.Instance.Spawner != null)
+        {
+            killCountViewModel = new KillCountViewModel(GameManager.Instance.Spawner);
+            killCountViewModel.OnKillCountTextChanged += UpdateKillCountText;
+            UpdateKillCountText(killCountViewModel.KillCountText);
+        }
     }
 
     private void OnDestroy()
     {
         UnsubscribeFromViewModelEvents();
+        
+        if (killCountViewModel != null)
+        {
+            killCountViewModel.OnKillCountTextChanged -= UpdateKillCountText;
+            killCountViewModel.Dispose();
+        }
     }
 
     private void SubscribeToViewModelEvents()
@@ -75,4 +91,8 @@ public class PlayerHUDView : MonoBehaviour
         if (levelText != null) levelText.text = text;
     }
 
+    private void UpdateKillCountText(string text)
+    {
+        if (killCountText != null) killCountText.text = text;
+    }
 }
