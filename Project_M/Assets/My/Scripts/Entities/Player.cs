@@ -1,39 +1,34 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace Hero
 {
     /// <summary>
-    /// 플레이어의 체력, 경험치 및 레벨 상태를 관리하는 클래스
+    /// 플레이어의 경험치 및 레벨 상태를 관리하는 클래스 (체력은 PlayerHealth에서 담당)
     /// </summary>
-    public class Player : MonoBehaviour, IDamageable
+    public class Player : MonoBehaviour
     {
-        [Header("체력 설정")]
-        [SerializeField] private float maxHealth = 100f;
-        private float currentHealth;
-
         [Header("경험치 및 레벨 설정")]
         [SerializeField] private int level = 1;
         [SerializeField] private float currentExp = 0;
         [SerializeField] private float nextExp = 100f; // 목표 경험치
 
-        [Header("데미지 설정")]
-        [SerializeField] private float invincibilityDuration = 0.5f; // 무적 지속 시간
-        private bool isInvincible = false;
-
-        private IKnockbackable knockbackable;
-        private DamageFlash damageFlash; // 데미지 깜빡임 추가
+        private PlayerHealth health;
 
         // UI 및 상태 업데이트를 위한 이벤트 정의
-        public event Action<float, float> OnHealthChanged; // (current, max)
         public event Action<float, float> OnExpChanged;    // (current, next)
         public event Action<int> OnLevelChanged;          // (level)
 
-        // 인터페이스 구현: 체력 정보
-        public float CurrentHealth => currentHealth;
-        public float MaxHealth => maxHealth;
-        public bool IsInvincible => isInvincible;
+        // 체력 정보 프로퍼티 (기존 호환성을 유지하기 위해 PlayerHealth에서 가져옴)
+        public float CurrentHealth => health != null ? health.CurrentHealth : 0f;
+        public float MaxHealth => health != null ? health.MaxHealth : 0f;
+        public bool IsInvincible => health != null ? health.IsInvincible : false;
+
+        public event Action<float, float> OnHealthChanged
+        {
+            add => health.OnHealthChanged += value;
+            remove => health.OnHealthChanged -= value;
+        }
 
         // 경험치 정보 프로퍼티
         public float CurrentExp => currentExp;
@@ -42,12 +37,15 @@ namespace Hero
 
         private void Awake()
         {
-            knockbackable = GetComponent<IKnockbackable>();
-            damageFlash = GetComponent<DamageFlash>();
+            health = GetComponent<PlayerHealth>();
+            
+            // 기존 이벤트 연동: 사망 시 플레이어의 Die 호출
+            if (health != null)
+            {
+                health.OnDeath += Die;
+            }
 
-            // 초기 체력 설정 및 이벤트 발생
-            currentHealth = maxHealth;
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            // 초기 상태 알림
             OnExpChanged?.Invoke(currentExp, nextExp);
             OnLevelChanged?.Invoke(level);
         }
@@ -89,42 +87,17 @@ namespace Hero
             OnLevelChanged?.Invoke(level);
         }
 
-        public void TakeDamage(float damage, Vector2? damageSourcePos = null)
-        {
-            if (isInvincible || currentHealth <= 0) return;
-
-            currentHealth -= damage;
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
-
-            // 깜빡임 효과 실행
-            if (damageFlash != null) damageFlash.CallFlash();
-
-            // 넉백 적용
-            if (knockbackable != null && damageSourcePos.HasValue)
-            {
-                Vector2 dir = ((Vector2)transform.position - damageSourcePos.Value).normalized;
-                // 인터페이스를 통한 넉백 실행
-                knockbackable.ApplyKnockBack(dir);
-            }
-
-            StartCoroutine(InvincibilityRoutine());
-
-            if (currentHealth <= 0)
-            {
-                Die();
-            }
-        }
-
-        private IEnumerator InvincibilityRoutine()
-        {
-            isInvincible = true;
-            yield return new WaitForSeconds(invincibilityDuration);
-            isInvincible = false;
-        }
-
         public void Die()
         {
             Debug.Log("플레이어가 사망했습니다!");
+        }
+
+        private void OnDestroy()
+        {
+            if (health != null)
+            {
+                health.OnDeath -= Die;
+            }
         }
     }
 }
