@@ -6,11 +6,12 @@ namespace Hero
     /// <summary>
     /// 몬스터의 전체적인 행동을 관리하는 클래스 (체력은 EnemyHealth에서 담당)
     /// </summary>
-    public class Enemy : MonoBehaviour, IRepositionable
+    public class Enemy : MonoBehaviour
     {
         [Header("데이터 설정")]
         [SerializeField] private EnemyData data; // 공통 능력치 데이터 에셋
         private Move move;         // 이동 컴포넌트 참조
+        private Chase chase;       // 추적 AI 참조
         private EnemyHealth health; // 체력 컴포넌트 참조
         private Animator anim;                // 애니메이터 추가
         private Collider2D enemyCollider;     // 콜라이더 추가
@@ -21,11 +22,13 @@ namespace Hero
         // 체력 및 무적 정보 프로퍼티 (기존 호환성 유지)
         public float CurrentHealth => health != null ? health.CurrentHealth : 0f;
         public float MaxHealth => health != null ? health.MaxHealth : 0f;
+        public bool IsDead => isDead; // 사망 상태 외부 노출
         public bool IsInvincible => isDead; // 죽는 중에는 무적 판정
 
         private void Awake()
         {
             move = GetComponent<Move>();
+            chase = GetComponent<Chase>();
             health = GetComponent<EnemyHealth>();
             anim = GetComponent<Animator>();
             enemyCollider = GetComponent<Collider2D>();
@@ -49,6 +52,7 @@ namespace Hero
             isDead = false;
             if (enemyCollider != null) enemyCollider.enabled = true;
             if (move != null) move.enabled = true;
+            if (chase != null) chase.enabled = true;
             if (anim != null) anim.SetBool("Dead", false);
             
             // 데이터 연동은 EnemyHealth의 OnEnable에서 처리함
@@ -67,19 +71,6 @@ namespace Hero
             // 이제 플레이어 정보 캐싱은 Reposition 컴포넌트에서 통합 관리합니다.
         }
 
-        /// <summary>
-        /// 플레이어의 위치와 진행 방향을 계산하여 적을 앞쪽 구역에 재배치합니다.
-        /// </summary>
-        public void Reposition(Vector3 playerPos, Vector2 playerDir)
-        {
-            // 재배치 거리 및 랜덤 오프셋 계산
-            float range = 20f;
-            Vector3 spawnPos = playerPos + (Vector3)(playerDir.normalized * range);
-            spawnPos += new Vector3(Random.Range(-10f, 10f), Random.Range(-10f, 10f), 0f);
-
-            // 새로운 위치로 순간이동
-            transform.position = spawnPos;
-        }
 
         public void Die()
         {
@@ -91,9 +82,18 @@ namespace Hero
         {
             isDead = true;
 
-            // 콜라이더 및 이동 비활성화하여 죽는 동안 간섭 배제
+            // 콜라이더 및 이동/AI 비활성화
             if (enemyCollider != null) enemyCollider.enabled = false;
-            if (move != null) move.enabled = false;
+            if (move != null)
+            {
+                move.Velocity = Vector2.zero; // 방향 초기화
+                move.enabled = false;
+            }
+            if (chase != null) chase.enabled = false;
+            
+            // 즉시 속도 정지 (관성 제거)
+            Rigidbody2D rb = GetComponent<Rigidbody2D>();
+            if (rb != null) rb.linearVelocity = Vector2.zero;
 
             // 사망 애니메이션 실행 (Bool 파라미터 사용)
             if (anim != null) anim.SetBool("Dead", true);

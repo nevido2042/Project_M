@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 3401233826091856197}
   - component: {fileID: -7092137434663877174}
   - component: {fileID: 1841353898845910533}
+  - component: {fileID: -3267301601354411804}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -292,3 +293,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hero.EnemyHealth
   maxHealth: 100
   data: {fileID: 11400000, guid: 8a5fedd2ca8b713478242d950a0df95e, type: 2}
+--- !u!114 &-3267301601354411804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4475037142795785458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 849038e41a84eaa48933665a8c54412a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.EnemyReposition
