@@ -1742,7 +1742,9 @@ MonoBehaviour:
   pullSpeed: 10
   itemLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  scanInterval: 0.2
+  maxScanResults: 32
 --- !u!1 &106060497
 GameObject:
   m_ObjectHideFlags: 0
@@ -3251,6 +3253,44 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 204313988}
   m_CullTransparentMesh: 1
+--- !u!1 &236735431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 236735432}
+  m_Layer: 0
+  m_Name: HUD Content
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &236735432
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 236735431}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.44151083, y: 0.44151083, z: 0.44151083}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 988735438}
+  - {fileID: 1187852704}
+  - {fileID: 1527798510}
+  m_Father: {fileID: 259013654}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -238.41585, y: -503.32236}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &259013649
 GameObject:
   m_ObjectHideFlags: 0
@@ -3348,9 +3388,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1595071556}
-  - {fileID: 988735438}
-  - {fileID: 1187852704}
-  - {fileID: 1527798510}
+  - {fileID: 236735432}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3370,10 +3408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58e89aa88e573d540a83b1ad9fcb05dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHUDView
-  healthSlider: {fileID: 1187852705}
-  expSlider: {fileID: 988735439}
-  levelText: {fileID: 0}
-  killCountText: {fileID: 1241733116}
+  content: {fileID: 236735431}
 --- !u!114 &259013656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5137,9 +5172,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 726316790}
-        m_TargetAssemblyTypeName: Hero.PauseMenuUI, Assembly-CSharp
-        m_MethodName: OnClickResume
+      - m_Target: {fileID: 512339009}
+        m_TargetAssemblyTypeName: Hero.GameManager, Assembly-CSharp
+        m_MethodName: ResumeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5358,10 +5393,6 @@ MonoBehaviour:
   upgrade: {fileID: 1555503715}
   player: {fileID: 50941453}
   audioMgr: {fileID: 365768553}
-  menuUI: {fileID: 1452129614}
-  pauseMenuUI: {fileID: 726316786}
-  deadMenuUI: {fileID: 2119134463}
-  pauseButton: {fileID: 1211855338}
 --- !u!4 &512339010
 Transform:
   m_ObjectHideFlags: 0
@@ -5643,6 +5674,158 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07ac0a938a4c08d429add960bc926e1a, type: 3}
+--- !u!1 &585365579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 585365580}
+  - component: {fileID: 585365583}
+  - component: {fileID: 585365582}
+  - component: {fileID: 585365581}
+  m_Layer: 0
+  m_Name: Shovel(Clone)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &585365580
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585365579}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 1.3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2135663351}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &585365581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585365579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d5948f5aaceec145badcd63705653c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.Shovel
+  damage: 5
+--- !u!61 &585365582
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585365579}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.3888889, y: 1}
+    newSize: {x: 0.3888889, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.3888889, y: 1}
+  m_EdgeRadius: 0
+--- !u!212 &585365583
+SpriteRenderer:
+  serializedVersion: 2
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 585365579}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Sprite: {fileID: 1737672109, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 0.3888889, y: 1}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_SpriteSortPoint: 0
 --- !u!1 &593254647
 GameObject:
   m_ObjectHideFlags: 0
@@ -6113,7 +6296,6 @@ GameObject:
   - component: {fileID: 726316787}
   - component: {fileID: 726316789}
   - component: {fileID: 726316788}
-  - component: {fileID: 726316790}
   m_Layer: 5
   m_Name: Pause Menu Panel
   m_TagString: Untagged
@@ -6179,18 +6361,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 726316786}
   m_CullTransparentMesh: 1
---- !u!114 &726316790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726316786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e4eae9a41e567c4f97b8d658161df06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Hero.PauseMenuUI
 --- !u!1 &745344739
 GameObject:
   m_ObjectHideFlags: 0
@@ -6568,6 +6738,7 @@ GameObject:
   m_Component:
   - component: {fileID: 988735438}
   - component: {fileID: 988735439}
+  - component: {fileID: 988735440}
   m_Layer: 5
   m_Name: EXP
   m_TagString: Untagged
@@ -6582,19 +6753,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 988735437}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.26495, y: 2.26495, z: 2.26495}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1370732790}
   - {fileID: 1310763000}
-  m_Father: {fileID: 259013654}
+  m_Father: {fileID: 236735432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -100}
-  m_SizeDelta: {x: -200, y: 20}
+  m_AnchoredPosition: {x: 540, y: 2003.5046}
+  m_SizeDelta: {x: 176.83167, y: 20}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &988735439
 MonoBehaviour:
@@ -6647,6 +6818,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &988735440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988735437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e3509e3612398842b4a43ad42054d1a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.ExpBarView
+  expSlider: {fileID: 0}
 --- !u!114 &1057770673 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1583686167982680150, guid: 07ac0a938a4c08d429add960bc926e1a, type: 3}
@@ -6787,6 +6971,10 @@ GameObject:
   - component: {fileID: 1184412590}
   - component: {fileID: 1184412589}
   - component: {fileID: 1184412593}
+  - component: {fileID: 1184412597}
+  - component: {fileID: 1184412596}
+  - component: {fileID: 1184412595}
+  - component: {fileID: 1184412594}
   m_Layer: 5
   m_Name: Static Canvas
   m_TagString: Untagged
@@ -6905,158 +7093,58 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 41bcb445aff0def4ea31628cfa0ab25c, type: 2}
   - {fileID: 11400000, guid: 1113e559626c15c45a9f418b1783cc30, type: 2}
   - {fileID: 11400000, guid: d606d6431142b0d4493427605e9c0ca2, type: 2}
---- !u!1 &1185161809
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1185161810}
-  - component: {fileID: 1185161813}
-  - component: {fileID: 1185161812}
-  - component: {fileID: 1185161811}
-  m_Layer: 0
-  m_Name: Shovel(Clone)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1185161810
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185161809}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 1.3, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2135663351}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1185161811
+--- !u!114 &1184412594
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185161809}
+  m_GameObject: {fileID: 1184412588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3d5948f5aaceec145badcd63705653c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 8e321a9187e6f644687a12b2a84d1b6c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Hero.Shovel
-  damage: 5
---- !u!61 &1185161812
-BoxCollider2D:
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.GameOverUI
+  content: {fileID: 2119134463}
+--- !u!114 &1184412595
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185161809}
+  m_GameObject: {fileID: 1184412588}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.3888889, y: 1}
-    newSize: {x: 0.3888889, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  m_Size: {x: 0.3888889, y: 1}
-  m_EdgeRadius: 0
---- !u!212 &1185161813
-SpriteRenderer:
-  serializedVersion: 2
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e4eae9a41e567c4f97b8d658161df06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.PauseMenuUI
+  content: {fileID: 726316786}
+--- !u!114 &1184412596
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1185161809}
+  m_GameObject: {fileID: 1184412588}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: 1737672109, guid: 0d5e657ee5a074e4baa53d5b248a01d2, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.3888889, y: 1}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee609336dca9c4047ac5f378abad8217, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.PauseButtonUI
+  content: {fileID: 1211855338}
+--- !u!114 &1184412597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1184412588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd50d5892ec7e604baf2aa05ef29ce77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.LobbyUI
+  content: {fileID: 1452129614}
 --- !u!1 &1187852703
 GameObject:
   m_ObjectHideFlags: 0
@@ -7067,6 +7155,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1187852704}
   - component: {fileID: 1187852705}
+  - component: {fileID: 1187852706}
   m_Layer: 5
   m_Name: HP
   m_TagString: Untagged
@@ -7081,19 +7170,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1187852703}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.26495, y: 2.26495, z: 2.26495}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2136841930}
   - {fileID: 1384502221}
-  m_Father: {fileID: 259013654}
+  m_Father: {fileID: 236735432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -130}
-  m_SizeDelta: {x: -200, y: 20}
+  m_AnchoredPosition: {x: 540, y: 1935.5564}
+  m_SizeDelta: {x: 176.83167, y: 20}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1187852705
 MonoBehaviour:
@@ -7146,6 +7235,22 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1187852706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187852703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75c4b0400a820ac4cb3e33cd85381633, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.HealthBarView
+  healthSlider: {fileID: 0}
+  followTarget: 0
+  offset: {x: 0, y: 1.2, z: 0}
+  visualRoot: {fileID: 0}
 --- !u!1 &1211855338
 GameObject:
   m_ObjectHideFlags: 0
@@ -7164,7 +7269,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1211855339
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9732,9 +9837,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 726316790}
-        m_TargetAssemblyTypeName: Hero.PauseMenuUI, Assembly-CSharp
-        m_MethodName: OnClickRestart
+      - m_Target: {fileID: 512339009}
+        m_TargetAssemblyTypeName: Hero.GameManager, Assembly-CSharp
+        m_MethodName: RestartScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9918,6 +10023,7 @@ GameObject:
   - component: {fileID: 1527798510}
   - component: {fileID: 1527798512}
   - component: {fileID: 1527798511}
+  - component: {fileID: 1527798513}
   m_Layer: 5
   m_Name: Kill
   m_TagString: Untagged
@@ -9934,15 +10040,15 @@ RectTransform:
   m_GameObject: {fileID: 1527798509}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.26495, y: 2.26495, z: 2.26495}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1241733115}
-  m_Father: {fileID: 259013654}
+  m_Father: {fileID: 236735432}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -14.699951}
+  m_AnchoredPosition: {x: 540, y: 2196.705}
   m_SizeDelta: {x: 44.444458, y: 44.444443}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1527798511
@@ -9983,6 +10089,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1527798509}
   m_CullTransparentMesh: 1
+--- !u!114 &1527798513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1527798509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 037713171ecfb0e4daf900f87fd1ece3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.KillCountView
+  killText: {fileID: 0}
 --- !u!1 &1530125943
 GameObject:
   m_ObjectHideFlags: 0
@@ -16059,7 +16178,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1185161810}
+  - {fileID: 585365580}
   m_Father: {fileID: 50941441}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2135663352

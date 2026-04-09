@@ -19,19 +19,65 @@ namespace Hero
             set => pickupRadius = value;
         }
 
-        private List<Transform> itemsInRange = new List<Transform>();
+        [SerializeField] private float scanInterval = 0.2f;   // 아이템 탐지 주기 (단위: 초)
+        [SerializeField] private int maxScanResults = 32;     // 한 번에 탐지할 최대 아이템 수
+
+        private float scanTimer;
+        private Collider2D[] scanResults;
+        private List<Transform> activeItems = new List<Transform>();
+
+        private void Awake()
+        {
+            scanResults = new Collider2D[maxScanResults];
+        }
 
         private void Update()
         {
-            // 근처 아이템 탐색 (물리 엔진 최적화를 위해 주기를 조절할 수 있으나 여기서는 단순 구현)
-            Collider2D[] hitItems = Physics2D.OverlapCircleAll(transform.position, pickupRadius, itemLayer);
+            UpdateScan();
+            UpdatePulling();
+        }
 
-            foreach (var hit in hitItems)
+        private void UpdateScan()
+        {
+            scanTimer += Time.deltaTime;
+            if (scanTimer >= scanInterval)
             {
-                // 아이템을 플레이어 방향으로 이동시킴
-                // 아이템 스크립트에 별도의 'Pull' 로직이 없어도 여기서 위치를 직접 수정 가능
-                Vector3 targetPos = transform.position;
-                hit.transform.position = Vector3.MoveTowards(hit.transform.position, targetPos, pullSpeed * Time.deltaTime);
+                scanTimer = 0f;
+
+                // Non-Alloc 방식을 사용하여 가비지 생성을 방지합니다.
+                int count = Physics2D.OverlapCircleNonAlloc(transform.position, pickupRadius, scanResults, itemLayer);
+
+                for (int i = 0; i < count; i++)
+                {
+                    Transform t = scanResults[i].transform;
+                    // 이미 추적 중인 아이템이 아니라면 추가
+                    if (!activeItems.Contains(t))
+                    {
+                        activeItems.Add(t);
+                    }
+                }
+            }
+        }
+
+        private void UpdatePulling()
+        {
+            Vector3 playerPos = transform.position;
+
+            for (int i = activeItems.Count - 1; i >= 0; i--)
+            {
+                Transform item = activeItems[i];
+
+                // 아이템이 파괴되었거나 비활성화(획득)된 경우 리스트에서 제거
+                if (item == null || !item.gameObject.activeInHierarchy)
+                {
+                    activeItems.RemoveAt(i);
+                    continue;
+                }
+
+                // 이동 처리
+                item.position = Vector3.MoveTowards(item.position, playerPos, pullSpeed * Time.deltaTime);
+                
+                // (선택 사항) 거리가 너무 멀어진 경우 추적 중단 로직을 추가할 수 있습니다.
             }
         }
 
