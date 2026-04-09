@@ -19,7 +19,6 @@ GameObject:
   - component: {fileID: 1228972657471745024}
   - component: {fileID: 1843478773952221300}
   - component: {fileID: 3401233826091856197}
-  - component: {fileID: -7092137434663877174}
   - component: {fileID: 1841353898845910533}
   - component: {fileID: -3267301601354411804}
   m_Layer: 6
@@ -265,20 +264,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Hero.EnemyKnockBack
   defaultForce: 5
   defaultDuration: 0.2
---- !u!114 &-7092137434663877174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4475037142795785458}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63fe1dbc42bfd3f43a479ae179100920, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Hero.DamageFlash
-  flashColor: {r: 1, g: 1, b: 1, a: 1}
-  flashDuration: 0.1
 --- !u!114 &1841353898845910533
 MonoBehaviour:
   m_ObjectHideFlags: 0

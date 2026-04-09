@@ -15,7 +15,8 @@ namespace Hero
         LevelUp,
         Collect,
         ButtonClick,
-        Lose
+        Lose,
+        Fire,
     }
 
     /// <summary>

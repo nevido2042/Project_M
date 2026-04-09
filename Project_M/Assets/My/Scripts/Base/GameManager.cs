@@ -30,7 +30,7 @@ namespace Hero
         [SerializeField] private EnemySpawner spawner;
         [SerializeField] private UpgradeManager upgrade;
         [SerializeField] private Player player;
-        [SerializeField] private new AudioManager audio;
+        [SerializeField] private AudioManager audioMgr;
 
         [Header("UI 시스템 참조")]
         [SerializeField] private GameObject menuUI;      // 로비/메인 메뉴
@@ -43,7 +43,7 @@ namespace Hero
         public EnemySpawner Spawner => spawner;
         public UpgradeManager Upgrade => upgrade;
         public Player Player => player;
-        public AudioManager Audio => audio;
+        public AudioManager Audio => audioMgr;
 
         private void Awake()
         {
@@ -65,7 +65,7 @@ namespace Hero
             if (pauseButton != null) pauseButton.SetActive(false); // 정지 버튼도 숨김
 
             // BGM 시작 (로비/메인 배경음)
-            if (audio != null) audio.PlayBGM(BgmType.Main);
+            if (audioMgr != null) audioMgr.PlayBGM(BgmType.Main);
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Hero
             if (pauseButton != null) pauseButton.SetActive(true); // 게임 시작 후에만 보임
 
             // 인게임 배경음으로 교체
-            if (audio != null) audio.PlayBGM(BgmType.InGame);
+            if (audioMgr != null) audioMgr.PlayBGM(BgmType.InGame);
 
             Debug.Log("[Game] 몬스터 정벌이 시작되었습니다!");
         }
@@ -127,10 +127,10 @@ namespace Hero
             Time.timeScale = 0f;
 
             // 패배 효과음 재생 및 배경음 정지
-            if (audio != null)
+            if (audioMgr != null)
             {
-                audio.StopBGM();
-                audio.PlaySFX(SfxType.Lose);
+                audioMgr.StopBGM();
+                audioMgr.PlaySFX(SfxType.Lose);
             }
 
             if (deadMenuUI != null) deadMenuUI.SetActive(true);

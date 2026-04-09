@@ -102,6 +102,17 @@ namespace Hero
             Release();
         }
 
+        public override void TakeDamage(float damage, Vector2? damageSourcePos = null)
+        {
+            base.TakeDamage(damage, damageSourcePos);
+
+            // 피격 애니메이션 트리거 발동
+            if (!isDead && anim != null)
+            {
+                anim.SetTrigger("Hit");
+            }
+        }
+
         public void Release()
         {
             if (pool != null)
