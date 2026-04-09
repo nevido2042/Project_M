@@ -13,7 +13,8 @@ namespace Hero
         protected float currentHealth;
 
         public event Action OnDeath;
-        public event Action<DamageData> OnDamaged; // 피격 이벤트 추가
+        public event Action<DamageData> OnDamaged;
+        public event Action<float, float> OnHealthChanged; // 체력 변경 이벤트 추가 (current, max)
 
         public float CurrentHealth => currentHealth;
         public float MaxHealth => maxHealth;
@@ -22,6 +23,15 @@ namespace Hero
         protected virtual void Awake()
         {
             currentHealth = maxHealth;
+            InvokeHealthChanged();
+        }
+
+        /// <summary>
+        /// 체력 변경 이벤트를 호출합니다. 자식 클래스에서도 안전하게 호출할 수 있도록 제공합니다.
+        /// </summary>
+        protected void InvokeHealthChanged()
+        {
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
         /// <summary>
@@ -39,6 +49,7 @@ namespace Hero
 
             // 이벤트 호출 (외부에서 넉백 등을 처리)
             OnDamaged?.Invoke(data);
+            InvokeHealthChanged();
 
             if (currentHealth <= 0)
             {
@@ -65,6 +76,7 @@ namespace Hero
         {
             if (currentHealth <= 0) return;
             currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
     }
 }

@@ -33,9 +33,11 @@ namespace Hero
 
         private void Start()
         {
-            // 시작 시 씬의 조이스틱들을 미리 찾아 캐싱 (성능 최적화)
-            joysticks = Object.FindObjectsByType<VirtualJoystick>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            // 시작 시 씬의 조이스틱들을 미리 찾아 캐싱 (비활성 상태인 조이스틱도 포함하여 검색)
+            joysticks = Object.FindObjectsByType<VirtualJoystick>(FindObjectsInactive.Include, FindObjectsSortMode.None);
         }
+
+
 
         /// <summary>
         /// 강화 선택창을 엽니다.

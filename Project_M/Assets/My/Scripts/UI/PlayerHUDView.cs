@@ -1,98 +1,47 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro; // TextMeshPro가 없을 경우 일반 Text로 변경 가능
 using Hero;
 
-/// <summary>
-/// 화면에 고정된 메인 HUD (HP, EXP, Level)를 렌더링하는 View
-/// </summary>
-public class PlayerHUDView : MonoBehaviour
+namespace Hero
 {
-    [Header("UI 요소 연결")]
-    [SerializeField] private Slider healthSlider; // 체력 슬라이더
-    [SerializeField] private Slider expSlider;    // 경험치 슬라이더
-    [SerializeField] private TextMeshProUGUI levelText; // 레벨 텍스트
-    [SerializeField] private TextMeshProUGUI killCountText; // 킬 수 텍스트
-
-    private PlayerStatusViewModel viewModel;
-    private KillCountViewModel killCountViewModel;
-
-    private void Start()
+    /// <summary>
+    /// 화면에 고정된 메인 HUD 컨테이너의 가시성(Show/Hide)을 관리하는 Controller.
+    /// 세부 UI 요소(HP, EXP 등)는 각각의 전용 View 스크립트에서 처리합니다.
+    /// </summary>
+    public class PlayerHUDView : MonoBehaviour
     {
-        // 플레이어를 자동으로 찾아 뷰모델 초기화
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
+        [Header("UI 패널 연결")]
+        [SerializeField] private GameObject content; // 실제 HUD 내용물 오브젝트 (부모 패널)
+
+        private void Start()
         {
-            Player player = playerObj.GetComponent<Player>();
-            if (player != null)
+            if (content == null)
             {
-                viewModel = new PlayerStatusViewModel(player);
-                SubscribeToViewModelEvents();
-                InitializeUI(); // 초기 상태 반영
+                Debug.LogWarning($"[{nameof(PlayerHUDView)}] Content(Panel)가 할당되지 않았습니다! {gameObject.name}에서 작동하지 않습니다.");
+                return;
+            }
+            
+            // 초기 상태: 게임 시작 전에는 숨김
+            content.SetActive(false);
+
+            // 게임 상태 이벤트 구독
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStart += Show;
+                GameManager.Instance.OnGameOver += Hide;
             }
         }
 
-        // 킬 카운트 뷰모델 초기화 (EnemySpawner는 싱글톤 GameManager를 통해 접근)
-        if (GameManager.Instance != null && GameManager.Instance.Spawner != null)
+        public void Show() { if (content != null) content.SetActive(true); }
+        public void Hide() { if (content != null) content.SetActive(false); }
+
+        private void OnDestroy()
         {
-            killCountViewModel = new KillCountViewModel(GameManager.Instance.Spawner);
-            killCountViewModel.OnKillCountTextChanged += UpdateKillCountText;
-            UpdateKillCountText(killCountViewModel.KillCountText);
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.OnGameStart -= Show;
+                GameManager.Instance.OnGameOver -= Hide;
+            }
         }
-    }
-
-    private void OnDestroy()
-    {
-        UnsubscribeFromViewModelEvents();
-        
-        if (killCountViewModel != null)
-        {
-            killCountViewModel.OnKillCountTextChanged -= UpdateKillCountText;
-            killCountViewModel.Dispose();
-        }
-    }
-
-    private void SubscribeToViewModelEvents()
-    {
-        if (viewModel == null) return;
-        viewModel.OnHealthRatioChanged += UpdateHealthSlider;
-        viewModel.OnExpRatioChanged += UpdateExpSlider;
-        viewModel.OnLevelTextChanged += UpdateLevelText;
-    }
-
-    private void UnsubscribeFromViewModelEvents()
-    {
-        if (viewModel == null) return;
-        viewModel.OnHealthRatioChanged -= UpdateHealthSlider;
-        viewModel.OnExpRatioChanged -= UpdateExpSlider;
-        viewModel.OnLevelTextChanged -= UpdateLevelText;
-    }
-
-    private void InitializeUI()
-    {
-        if (viewModel == null) return;
-        UpdateHealthSlider(viewModel.HealthRatio);
-        UpdateExpSlider(viewModel.ExpRatio);
-        UpdateLevelText(viewModel.LevelText);
-    }
-
-    private void UpdateHealthSlider(float ratio)
-    {
-        if (healthSlider != null) healthSlider.value = ratio;
-    }
-
-    private void UpdateExpSlider(float ratio)
-    {
-        if (expSlider != null) expSlider.value = ratio;
-    }
-
-    private void UpdateLevelText(string text)
-    {
-        if (levelText != null) levelText.text = text;
-    }
-
-    private void UpdateKillCountText(string text)
-    {
-        if (killCountText != null) killCountText.text = text;
     }
 }
+

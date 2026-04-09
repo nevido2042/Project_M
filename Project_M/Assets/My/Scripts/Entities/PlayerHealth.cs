@@ -14,7 +14,6 @@ namespace Hero
         private bool isInvincible = false;
         private Animator animator;
 
-        public event Action<float, float> OnHealthChanged;
 
         public override bool IsInvincible => isInvincible;
 
@@ -22,8 +21,6 @@ namespace Hero
         {
             base.Awake();
             animator = GetComponent<Animator>();
-            // 초기 체력 값을 UI 등에 알리기 위해 이벤트 호출
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
         public override void TakeDamage(DamageData data)
@@ -31,9 +28,6 @@ namespace Hero
             if (isInvincible || currentHealth <= 0) return;
 
             base.TakeDamage(data);
-
-            // 체력 변화 알림
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
 
             if (currentHealth > 0)
             {
@@ -90,7 +84,6 @@ namespace Hero
         public override void Heal(float amount)
         {
             base.Heal(amount);
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
     }
 }

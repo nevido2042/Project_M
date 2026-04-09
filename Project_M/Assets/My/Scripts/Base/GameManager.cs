@@ -1,4 +1,6 @@
-using UnityEngine;using UnityEngine.InputSystem;
+using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
 
 using UnityEngine.SceneManagement;
 
@@ -16,7 +18,7 @@ namespace Hero
             {
                 if (instance == null)
                 {
-                    instance = Object.FindAnyObjectByType<GameManager>();
+                    instance = UnityEngine.Object.FindAnyObjectByType<GameManager>();
                     if (instance == null)
                     {
                         Debug.LogError("씬에 GameManager가 존재하지 않습니다!");
@@ -33,11 +35,13 @@ namespace Hero
         [SerializeField] private Player player;
         [SerializeField] private AudioManager audioMgr;
 
-        [Header("UI 시스템 참조")]
-        [SerializeField] private GameObject menuUI;      // 로비/메인 메뉴
-        [SerializeField] private GameObject pauseMenuUI; // 일시 정지 메뉴
-        [SerializeField] private GameObject deadMenuUI;  // 사망 메뉴 (Game Over)
-        [SerializeField] private GameObject pauseButton; // 인게임 일시 정지 버튼 (HUD)
+        /* UI 시스템 참조는 이제 각 UI 컴포넌트(LobbyUI, PauseMenuUI 등)에서 이벤트를 구독하여 처리합니다. */
+
+        // 게임 상태 관리 이벤트
+        public event Action OnGameStart;
+        public event Action OnGamePause;
+        public event Action OnGameResume;
+        public event Action OnGameOver;
 
         // 외부에서 접근할 수 있는 읽기 전용 프로퍼티
         public PoolManager Pool => pool;
@@ -76,13 +80,12 @@ private void Awake()
             // [초기 상태: 로비]
             Time.timeScale = 0f;
             
-            if (menuUI != null) menuUI.SetActive(true);
-            if (pauseMenuUI != null) pauseMenuUI.SetActive(false); // 메뉴는 숨김
-            if (pauseButton != null) pauseButton.SetActive(false); // 정지 버튼도 숨김
+            // UI 상태는 각 UI 클래스(LobbyUI 등)에서 이벤트 및 Start를 통해 초기화됩니다.
 
             // BGM 시작 (로비/메인 배경음)
             if (audioMgr != null) audioMgr.PlayBGM(BgmType.Main);
         }
+
 
         /// <summary>
         /// 실제 게임을 기동 (로비 -> 인게임 전환 시 호출)
@@ -91,15 +94,17 @@ private void Awake()
         {
             Time.timeScale = 1f;
             
-            if (menuUI != null) menuUI.SetActive(false);
-            if (pauseMenuUI != null) pauseMenuUI.SetActive(false);
-            if (pauseButton != null) pauseButton.SetActive(true); // 게임 시작 후에만 보임
+            // 게임 시작 이벤트 호출 (UI 구성 요소들이 이를 구독하여 스스로를 켜고 끕니다)
+
+            // 게임 시작 이벤트 호출 (조이스틱 등에서 구독 가능)
+            OnGameStart?.Invoke();
 
             // 인게임 배경음으로 교체
             if (audioMgr != null) audioMgr.PlayBGM(BgmType.InGame);
 
             Debug.Log("[Game] 몬스터 정벌이 시작되었습니다!");
         }
+
 
         /// <summary>
         /// 게임 일시 정지 (플레이 중 호출)
@@ -108,8 +113,10 @@ private void Awake()
         {
             Time.timeScale = 0f;
             
-            if (pauseMenuUI != null) pauseMenuUI.SetActive(true);
-            if (pauseButton != null) pauseButton.SetActive(false); // 정지 중에는 숨김 (선택 사항)
+            // if (pauseMenuUI != null) pauseMenuUI.SetActive(true); // 이제 UI에서 이벤트를 구독하여 처리
+            // if (pauseButton != null) pauseButton.SetActive(false); 
+
+            OnGamePause?.Invoke();
 
             Debug.Log("[Game] 게임이 일시 정지되었습니다.");
         }
@@ -117,15 +124,21 @@ private void Awake()
         /// <summary>
         /// 게임 재개 (PauseMenuUI에서 호출 권장)
         /// </summary>
-        public void ResumeGame(GameObject targetPauseMenu)
+        public void ResumeGame()
         {
             Time.timeScale = 1f;
             
-            if (targetPauseMenu != null) targetPauseMenu.SetActive(false);
-            if (pauseButton != null) pauseButton.SetActive(true); // 다시 보이게 설정
+            // OnGameResume 이벤트를 통해 각 UI가 처리
+
+            OnGameResume?.Invoke();
 
             Debug.Log("[Game] 전투를 재개합니다.");
         }
+
+        /// <summary>
+        /// [레거시 지원] 인스펙터에서 직접 호출하던 경우를 위한 오버로드
+        /// </summary>
+        public void ResumeGame(GameObject legacyParam) => ResumeGame();
 
         /// <summary>
         /// 플레이어 사망 시 호출되는 게임 오버 로직
@@ -149,11 +162,14 @@ private void Awake()
                 audioMgr.PlaySFX(SfxType.Lose);
             }
 
-            if (deadMenuUI != null) deadMenuUI.SetActive(true);
-            if (pauseButton != null) pauseButton.SetActive(false);
+            // 게임 종료 이벤트 호출
+
+            // 게임 종료 이벤트 호출
+            OnGameOver?.Invoke();
 
             Debug.Log("[Game] 게임 오버!");
         }
+
 
         /// <summary>
         /// 씬 리스타트

@@ -24,12 +24,21 @@ namespace Hero
         /// </summary>
         public void Initialize(HealthBase model, Transform target)
         {
+            if (viewModel != null) viewModel.Dispose();
+            
             targetTransform = target;
             viewModel = new HealthViewModel(model);
+            viewModel.OnHealthRatioChanged += UpdateUI;
+            
+            // 초기 UI 반영
+            UpdateUI(viewModel.HealthRatio);
         }
 
         private void Start()
         {
+            if (healthSlider == null) healthSlider = GetComponent<Slider>();
+            if (healthSlider == null) healthSlider = GetComponentInChildren<Slider>();
+
             // 명시적으로 설정되지 않은 경우, 플레이어를 자동으로 찾아 연결 (HUD 용도)
             if (viewModel == null)
             {
@@ -45,28 +54,32 @@ namespace Hero
             }
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            if (viewModel == null) return;
+            if (viewModel != null)
+            {
+                viewModel.OnHealthRatioChanged -= UpdateUI;
+                viewModel.Dispose();
+            }
+        }
 
-            // 1. UI 데이터 갱신 (ViewModel을 통해 가공된 데이터 읽기)
+        private void UpdateUI(float ratio)
+        {
             if (healthSlider != null)
             {
-                healthSlider.value = viewModel.HealthRatio;
+                healthSlider.value = ratio;
             }
 
-            // 2. 사망 또는 상태에 따른 시각적 처리
-            if (visualRoot != null)
+            // 사망 상태에 따른 시각적 처리
+            if (visualRoot != null && viewModel != null)
             {
-                // HUD로 쓸 때는 항상 보이게 하거나, 조건부로 처리 가능
-                bool shouldShow = !viewModel.IsDead;
-                visualRoot.SetActive(shouldShow);
+                visualRoot.SetActive(!viewModel.IsDead);
             }
         }
 
         private void LateUpdate()
         {
-            // 3. 추적 모드일 때만 월드 좌표 동기화
+            // 추적 모드일 때만 월드 좌표 동기화 (머리 위 체력바용)
             if (followTarget && targetTransform != null)
             {
                 transform.position = targetTransform.position + offset;
@@ -74,3 +87,4 @@ namespace Hero
         }
     }
 }
+
