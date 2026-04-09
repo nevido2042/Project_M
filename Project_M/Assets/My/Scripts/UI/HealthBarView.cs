@@ -22,7 +22,7 @@ namespace Hero
         /// <summary>
         /// 외부에서 모델과 타겟을 명시적으로 연결합니다.
         /// </summary>
-        public void Initialize(IDamageable model, Transform target)
+        public void Initialize(HealthBase model, Transform target)
         {
             targetTransform = target;
             viewModel = new HealthViewModel(model);
@@ -36,7 +36,7 @@ namespace Hero
                 GameObject player = GameObject.FindGameObjectWithTag("Player");
                 if (player != null)
                 {
-                    IDamageable model = player.GetComponent<IDamageable>();
+                    HealthBase model = player.GetComponent<HealthBase>();
                     if (model != null)
                     {
                         Initialize(model, player.transform);

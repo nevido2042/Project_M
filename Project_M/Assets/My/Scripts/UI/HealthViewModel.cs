@@ -7,9 +7,9 @@ namespace Hero
     /// </summary>
     public class HealthViewModel
     {
-        private readonly IDamageable model;
+        private readonly HealthBase model;
 
-        public HealthViewModel(IDamageable model)
+        public HealthViewModel(HealthBase model)
         {
             this.model = model;
         }

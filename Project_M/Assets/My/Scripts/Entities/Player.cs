@@ -84,22 +84,6 @@ namespace Hero
             OnLevelChanged?.Invoke(level);
         }
 
-        /// <summary>
-        /// 원거리 무기의 탄환을 충전합니다.
-        /// </summary>
-        /// <param name="amount">충전할 탄환 수</param>
-        public void AddGunAmmo(int amount)
-        {
-            if (rangedWeapon != null)
-            {
-                rangedWeapon.AddAmmo(amount);
-            }
-            else
-            {
-                Debug.LogWarning("RangedWeapon 컴포넌트가 연결되지 않았습니다.");
-            }
-        }
-
         private void OnDestroy()
         {
         }

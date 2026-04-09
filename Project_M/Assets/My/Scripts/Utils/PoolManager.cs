@@ -22,7 +22,6 @@ namespace Hero
         private IObjectPool<Enemy> enemyPool;
         private IObjectPool<ExperienceItem> expPool;
         private IObjectPool<Bullet> bulletPool;
-        private IObjectPool<GunItem> gunPool;
 
         private void Awake()
         {
@@ -44,11 +43,6 @@ namespace Hero
                 true, defaultCapacity, maxPoolSize
             );
 
-            // 총 아이템 풀 초기화
-            gunPool = new ObjectPool<GunItem>(
-                CreateGunItem, OnGetGunItem, OnReleaseGunItem, OnDestroyGunItem,
-                true, defaultCapacity, maxPoolSize
-            );
         }
 
         #region Pool Callbacks
@@ -88,22 +82,11 @@ namespace Hero
         private void OnReleaseBullet(Bullet bullet) => bullet.gameObject.SetActive(false);
         private void OnDestroyBullet(Bullet bullet) => Destroy(bullet.gameObject);
 
-        private GunItem CreateGunItem()
-        {
-            GameObject obj = Instantiate(gunItemPrefab, transform);
-            GunItem item = obj.GetComponent<GunItem>();
-            item.SetPool(gunPool);
-            return item;
-        }
 
-        private void OnGetGunItem(GunItem item) => item.gameObject.SetActive(true);
-        private void OnReleaseGunItem(GunItem item) => item.gameObject.SetActive(false);
-        private void OnDestroyGunItem(GunItem item) => Destroy(item.gameObject);
         #endregion
 
         public Enemy GetEnemy() => enemyPool.Get();
         public ExperienceItem GetExperienceItem() => expPool.Get();
         public Bullet GetBullet() => bulletPool.Get();
-        public GunItem GetGunItem() => gunPool.Get();
     }
 }

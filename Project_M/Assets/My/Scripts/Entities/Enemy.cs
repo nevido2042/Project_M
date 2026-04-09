@@ -69,12 +69,14 @@ namespace Hero
             // 충돌 대상이 플레이어 태그를 가지고 있다면
             if (collision.gameObject.CompareTag("Player"))
             {
-                // IDamageable 인터페이스를 찾아 데미지를 줍니다.
-                IDamageable hit = collision.gameObject.GetComponent<IDamageable>();
+                // HealthBase 컴포넌트를 찾아 데미지 정보를 전달합니다.
+                HealthBase hit = collision.gameObject.GetComponent<HealthBase>();
                 if (hit != null && data != null)
                 {
                     // 자신의 위치를 함께 넘겨 플레이어가 반대 방향으로 넉백되도록 함
-                    hit.TakeDamage(data.DamageAmount, (Vector2)transform.position);
+                    // 몬스터 접촉 데미지는 약간의 넉백(2.0f)을 줌
+                    DamageData dData = new DamageData(data.DamageAmount, transform.position, 2f);
+                    hit.TakeDamage(dData);
                 }
             }
         }

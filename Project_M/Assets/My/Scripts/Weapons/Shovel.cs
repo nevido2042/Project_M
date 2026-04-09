@@ -16,18 +16,20 @@ namespace Hero
         /// <param name="collision">충돌한 콜라이더 정보</param>
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            // 1. 충돌한 대상이 데미지를 입을 수 있는 인터페이스(IDamageable)를 가졌는지 확인
-            IDamageable target = collision.GetComponent<IDamageable>();
+            // 1. 충돌한 대상이 데미지를 입을 수 있는 HealthBase 컴포넌트를 가졌는지 확인
+            HealthBase target = collision.GetComponent<HealthBase>();
             
             if (target != null)
             {
                 // 2. 대상이 무적 상태가 아닐 경우에만 데미지 부여
                 if (!target.IsInvincible)
                 {
-                    target.TakeDamage(damage);
+                    // 근접 무기인 삽은 넉백을 주지 않음 (knockbackForce = 0)
+                    DamageData data = new DamageData(damage, transform.position, 0f);
+                    target.TakeDamage(data);
                     
                     // 디버그용 로그 (필요 시 주석 처리)
-                    Debug.Log($"{collision.name}에게 {damage}의 데미지를 입혔습니다.");
+                    Debug.Log($"{collision.name}에게 {damage}의 데미지를 입혔습니다. (근접)");
                 }
             }
         }

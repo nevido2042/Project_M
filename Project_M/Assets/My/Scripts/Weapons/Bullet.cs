@@ -12,11 +12,13 @@ namespace Hero
         [SerializeField] private float damage = 5f;
         [SerializeField] private float lifeTime = 5f;
         [SerializeField] private float rotationOffset = -90f; // 스프라이트 머리가 위쪽(Y+)일 경우 -90
+        [SerializeField] private float knockbackForce = 5f;   // 원거리 탄환의 넉백 힘
 
         private Vector2 direction;
         private Rigidbody2D rb;
         private UnityEngine.Pool.IObjectPool<Bullet> pool;
         private float timer;
+        private bool isReleased; // 중복 반납 방지 플래그
 
         private void Awake()
         {
@@ -28,11 +30,11 @@ namespace Hero
             this.pool = pool;
         }
 
-        public void Init(Vector2 dir, float dmg)
+        public void Init(Vector2 dir)
         {
             direction = dir.normalized;
-            damage = dmg;
             timer = 0f;
+            isReleased = false; // 플래그 초기화
 
             // 방향에 맞춰 회전 설정 (오프셋 포함)
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -61,10 +63,12 @@ namespace Hero
         {
             if (collision.CompareTag("Enemy"))
             {
-                IDamageable target = collision.GetComponent<IDamageable>();
+                HealthBase target = collision.GetComponent<HealthBase>();
                 if (target != null)
                 {
-                    target.TakeDamage(damage, transform.position);
+                    // 원거리 무기인 총알은 넉백을 적용함
+                    DamageData data = new DamageData(damage, transform.position, knockbackForce);
+                    target.TakeDamage(data);
                 }
                 Release();
             }
@@ -72,7 +76,9 @@ namespace Hero
 
         public void Release()
         {
-            if (this == null) return;
+            if (isReleased || this == null) return;
+            isReleased = true;
+
             if (pool != null)
                 pool.Release(this);
             else

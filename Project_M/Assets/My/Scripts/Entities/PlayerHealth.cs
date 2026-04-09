@@ -26,11 +26,11 @@ namespace Hero
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
-        public override void TakeDamage(float damage, Vector2? damageSourcePos = null)
+        public override void TakeDamage(DamageData data)
         {
             if (isInvincible || currentHealth <= 0) return;
 
-            base.TakeDamage(damage, damageSourcePos);
+            base.TakeDamage(data);
 
             // 체력 변화 알림
             OnHealthChanged?.Invoke(currentHealth, maxHealth);

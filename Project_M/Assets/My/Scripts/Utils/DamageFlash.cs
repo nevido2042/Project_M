@@ -39,6 +39,35 @@ namespace Hero
             }
         }
 
+        private void OnEnable()
+        {
+            // HealthBase 컴포넌트를 찾아 이벤트를 구독합니다.
+            var damageable = GetComponent<HealthBase>();
+            if (damageable != null)
+            {
+                damageable.OnDamaged += HandleDamaged;
+            }
+        }
+
+        private void OnDisable()
+        {
+            // 구독 해제
+            var damageable = GetComponent<HealthBase>();
+            if (damageable != null)
+            {
+                damageable.OnDamaged -= HandleDamaged;
+            }
+        }
+
+        private void HandleDamaged(DamageData data)
+        {
+            // 데미지가 0보다 클 때만 깜빡임 (회복 등 제외)
+            if (data.damage > 0)
+            {
+                CallFlash();
+            }
+        }
+
         /// <summary>
         /// 하얀색 깜빡임 효과를 호출합니다.
         /// </summary>
