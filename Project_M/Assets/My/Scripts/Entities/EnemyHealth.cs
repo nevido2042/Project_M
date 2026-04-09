@@ -7,12 +7,11 @@ namespace Hero
     /// <summary>
     /// 몬스터 전용 체력 관리 컴포넌트
     /// </summary>
-    public class EnemyHealth : HealthBase, IPoolable
+    public class EnemyHealth : HealthBase
     {
         [Header("몬스터 데이터")]
         [SerializeField] private EnemyData data;
 
-        private IObjectPool<Enemy> pool;
         private Enemy enemy;
         private Animator anim;
         private Collider2D enemyCollider;
@@ -36,11 +35,6 @@ namespace Hero
             enemyCollider = GetComponent<Collider2D>();
             move = GetComponent<Move>();
             chase = GetComponent<Chase>();
-        }
-
-        public void SetPool(IObjectPool<Enemy> pool)
-        {
-            this.pool = pool;
         }
 
         private void OnEnable()
@@ -115,9 +109,9 @@ namespace Hero
 
         public void Release()
         {
-            if (pool != null)
+            if (enemy != null)
             {
-                pool.Release(enemy);
+                enemy.Release();
             }
             else
             {

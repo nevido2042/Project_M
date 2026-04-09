@@ -14,6 +14,7 @@ namespace Hero
         private EnemyHealth health; // 체력 컴포넌트 참조
         private Animator anim;                // 애니메이터 추가
         private Collider2D enemyCollider;     // 콜라이더 추가
+        private UnityEngine.Pool.IObjectPool<Enemy> pool; // 풀 참조 직접 관리
 
         // 체력 및 무적 정보 프로퍼티 (기존 호환성 유지)
         public float CurrentHealth => health != null ? health.CurrentHealth : 0f;
@@ -50,7 +51,7 @@ namespace Hero
         /// </summary>
         public void SetPool(UnityEngine.Pool.IObjectPool<Enemy> pool)
         {
-            if (health != null) health.SetPool(pool);
+            this.pool = pool;
         }
 
         private void Start()
@@ -86,7 +87,10 @@ namespace Hero
         /// </summary>
         public void Release()
         {
-            if (health != null) health.Release();
+            if (pool != null)
+                pool.Release(this);
+            else
+                gameObject.SetActive(false);
         }
     }
 }

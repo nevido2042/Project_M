@@ -7,7 +7,7 @@ namespace Hero
     /// 넉백 기능을 제공하는 베이스 추상 클래스
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
-    public abstract class KnockBackBase : MonoBehaviour, IKnockbackable
+    public abstract class KnockBackBase : MonoBehaviour
     {
         [Header("기본 넉백 설정")]
         [SerializeField] protected float defaultForce = 5f;
@@ -27,20 +27,20 @@ namespace Hero
         protected virtual void OnEnable()
         {
             // HealthBase 컴포넌트를 찾아 이벤트를 구독합니다.
-            var damageable = GetComponent<HealthBase>();
-            if (damageable != null)
+            HealthBase health = GetComponent<HealthBase>();
+            if (health != null)
             {
-                damageable.OnDamaged += HandleDamaged;
+                health.OnDamaged += HandleDamaged;
             }
         }
 
         protected virtual void OnDisable()
         {
             // 구독 해제
-            var damageable = GetComponent<HealthBase>();
-            if (damageable != null)
+            HealthBase health = GetComponent<HealthBase>();
+            if (health != null)
             {
-                damageable.OnDamaged -= HandleDamaged;
+                health.OnDamaged -= HandleDamaged;
             }
         }
 

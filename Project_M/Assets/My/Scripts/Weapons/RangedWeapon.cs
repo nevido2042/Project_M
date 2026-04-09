@@ -13,6 +13,15 @@ namespace Hero
         [SerializeField] private float scanRange = 10f;    // 적 탐색 범위
         [SerializeField] private LayerMask enemyLayer;     // 적 레이어
 
+        [Header("업그레이드 설정")]
+        [SerializeField] private BulletData bulletData;    // 탄환 티어 정보
+        [SerializeField] private int currentTier = 0;      // 현재 탄환 레벨 (0부터 시작)
+        [SerializeField] private int bulletCount = 1;      // 발사 탄환 수
+        [SerializeField] private float spreadAngle = 10f;  // 탄환 사이의 각도
+
+        public int CurrentTier { get => currentTier; set => currentTier = value; }
+        public int BulletCount { get => bulletCount; set => bulletCount = value; }     // 적 레이어
+
         public float FireRate
         {
             get => fireRate;
@@ -72,17 +81,35 @@ namespace Hero
             // 탄환 생성 및 발사
             if (GameManager.Instance != null && GameManager.Instance.Pool != null)
             {
-                Bullet bullet = GameManager.Instance.Pool.GetBullet();
-                if (bullet != null)
+                // 현재 티어 정보 가져오기
+                BulletData.BulletLevel tierData = bulletData != null ? bulletData.GetLevelData(currentTier) : default;
+                Vector2 baseDir = (target.position - transform.position).normalized;
+
+                // 탄환 수만큼 부채꼴로 발사
+                for (int i = 0; i < bulletCount; i++)
                 {
-                    bullet.transform.position = transform.position;
-                    Vector2 dir = (target.position - transform.position).normalized;
-                    bullet.Init(dir);
-                    
-                    // 사운드 효과
-                    if (GameManager.Instance.Audio != null)
-                        GameManager.Instance.Audio.PlaySFX(SfxType.Fire);
+                    Bullet bullet = GameManager.Instance.Pool.GetBullet();
+                    if (bullet != null)
+                    {
+                        bullet.transform.position = transform.position;
+                        
+                        // 발사 방향 계산 (부채꼴)
+                        Vector2 finalDir = baseDir;
+                        if (bulletCount > 1)
+                        {
+                            float startAngle = -spreadAngle * (bulletCount - 1) * 0.5f;
+                            float currentAngle = startAngle + (spreadAngle * i);
+                            finalDir = Quaternion.Euler(0, 0, currentAngle) * baseDir;
+                        }
+
+                        // 탄환 초기화 (데미지와 스프라이트 전달)
+                        bullet.Init(finalDir, tierData.damage, tierData.bulletSprite);
+                    }
                 }
+                
+                // 사운드 효과
+                if (GameManager.Instance.Audio != null)
+                    GameManager.Instance.Audio.PlaySFX(SfxType.Fire);
             }
         }
 

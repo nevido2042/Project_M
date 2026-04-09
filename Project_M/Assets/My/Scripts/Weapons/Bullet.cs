@@ -20,9 +20,12 @@ namespace Hero
         private float timer;
         private bool isReleased; // 중복 반납 방지 플래그
 
+        private SpriteRenderer spriteRenderer;
+
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         }
 
         public void SetPool(UnityEngine.Pool.IObjectPool<Bullet> pool)
@@ -30,17 +33,20 @@ namespace Hero
             this.pool = pool;
         }
 
-        public void Init(Vector2 dir)
+        public void Init(Vector2 dir, float damage, Sprite sprite)
         {
             direction = dir.normalized;
+            this.damage = damage;
+            
+            if (spriteRenderer != null)
+                spriteRenderer.sprite = sprite;
+                
             timer = 0f;
-            isReleased = false; // 플래그 초기화
+            isReleased = false;
 
-            // 방향에 맞춰 회전 설정 (오프셋 포함)
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, angle + rotationOffset);
 
-            // 물리 엔진을 이용한 속도 설정
             if (rb != null)
             {
                 rb.linearVelocity = direction * speed;

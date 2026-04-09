@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16d402cd2d2b9874fb80c11fee2eabc8, type: 3}
   m_Name: ShovelUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::Hero.ShovelUpgradeData
-  upgradeName: Shovel Count Ugrade
-  description: Shovel Count Ugrade Shovel Count Ugrade Shovel Count Ugrade
+  upgradeName: Shovel Count
+  description: Increases the number of shovels rotating around the player.
   icon: {fileID: -181907988, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   maxLevel: 5
   currentLevel: 0

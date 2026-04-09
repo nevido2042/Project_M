@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853062083ba6d7843ad5f7037a34e210, type: 3}
   m_Name: MoveSpeedUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::Hero.MoveSpeedUpgradeData
-  upgradeName: Move Speed Up
-  description: Move Speed Up Move Speed Up Move Speed Up
+  upgradeName: Movement Speed
+  description: Increases the player's movement speed.
   icon: {fileID: -966295699, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
   maxLevel: 5
   currentLevel: 0

@@ -5,7 +5,7 @@ namespace Hero
     /// <summary>
     /// 삽 무기의 개수를 증가시키는 강화 항목
     /// </summary>
-    [CreateAssetMenu(fileName = "ShovelUpgrade", menuName = "Upgrade/ShovelCount")]
+    [CreateAssetMenu(fileName = "ShovelUpgrade", menuName = "Upgrades/ShovelCount")]
     public class ShovelUpgradeData : UpgradeData
     {
         public override void ApplyUpgrade(Player player)

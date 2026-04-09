@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abd063748a5e6c64c8232801c45430b6, type: 3}
+  m_Name: BulletCountUpgrade
+  m_EditorClassIdentifier: Assembly-CSharp::Hero.BulletCountUpgradeData
+  upgradeName: Shotgun Pellet Count
+  description: Increases the number of bullets fired simultaneously.
+  icon: {fileID: -762074860, guid: d71a3dc7aa20fad4f9a99fc76a9254ba, type: 3}
+  maxLevel: 5
+  currentLevel: 0

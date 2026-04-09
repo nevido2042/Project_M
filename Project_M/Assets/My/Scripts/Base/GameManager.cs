@@ -1,4 +1,5 @@
-using UnityEngine;
+using UnityEngine;using UnityEngine.InputSystem;
+
 using UnityEngine.SceneManagement;
 
 namespace Hero
@@ -45,7 +46,22 @@ namespace Hero
         public Player Player => player;
         public AudioManager Audio => audioMgr;
 
-        private void Awake()
+        private void Update()
+        {
+            // [디버그 전용] L 키를 누르면 즉시 레벨업 (New Input System 기반)
+            if (Keyboard.current != null && Keyboard.current.lKey.wasPressedThisFrame)
+            {
+                if (player != null)
+                {
+                    float expNeeded = player.NextExp - player.CurrentExp;
+                    player.GetExp(expNeeded);
+                    Debug.Log("<color=yellow>[Cheat] 레벨업 치트 사용!</color>");
+                }
+            }
+        }
+
+
+private void Awake()
         {
             if (instance != null && instance != this)
             {
