@@ -5,7 +5,7 @@ namespace Hero
     /// <summary>
     /// 플레이어의 이동 속도를 증가시키는 강화 항목
     /// </summary>
-    [CreateAssetMenu(fileName = "MoveSpeedUpgrade", menuName = "Upgrade/MoveSpeed")]
+    [CreateAssetMenu(fileName = "MoveSpeedUpgrade", menuName = "Upgrades/MoveSpeed")]
     public class MoveSpeedUpgradeData : UpgradeData
     {
         [Header("속도 설정")]
