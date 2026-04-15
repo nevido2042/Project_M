@@ -25,10 +25,15 @@ namespace Hero
         private float scanTimer;
         private Collider2D[] scanResults;
         private List<Transform> activeItems = new List<Transform>();
+        private ContactFilter2D filter;
 
         private void Awake()
         {
             scanResults = new Collider2D[maxScanResults];
+            
+            filter = new ContactFilter2D();
+            filter.SetLayerMask(itemLayer);
+            filter.useTriggers = true;
         }
 
         private void Update()
@@ -44,8 +49,8 @@ namespace Hero
             {
                 scanTimer = 0f;
 
-                // Non-Alloc 방식을 사용하여 가비지 생성을 방지합니다.
-                int count = Physics2D.OverlapCircleNonAlloc(transform.position, pickupRadius, scanResults, itemLayer);
+                // 캐싱된 filter를 사용하여 주변 아이템을 탐지합니다.
+                int count = Physics2D.OverlapCircle(transform.position, pickupRadius, filter, scanResults);
 
                 for (int i = 0; i < count; i++)
                 {

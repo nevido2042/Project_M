@@ -28,12 +28,13 @@ namespace Hero
             }
         }
 
-        [Header("핵심 시스템 참조")]
-        [SerializeField] private PoolManager pool;
-        [SerializeField] private EnemySpawner spawner;
-        [SerializeField] private UpgradeManager upgrade;
-        [SerializeField] private Player player;
-        [SerializeField] private AudioManager audioMgr;
+        [Header("핵심 시스템 참조 (자동 할당)")]
+        private PoolManager pool;
+        private EnemySpawner spawner;
+        private UpgradeManager upgrade;
+        private Player player;
+        private AudioManager audioMgr;
+        private DatabaseManager database;
 
         /* UI 시스템 참조는 이제 각 UI 컴포넌트(LobbyUI, PauseMenuUI 등)에서 이벤트를 구독하여 처리합니다. */
 
@@ -65,7 +66,7 @@ namespace Hero
         }
 
 
-private void Awake()
+        private void Awake()
         {
             if (instance != null && instance != this)
             {
@@ -73,6 +74,16 @@ private void Awake()
                 return;
             }
             instance = this;
+
+            // 핵심 매니저 시스템 자동 할당 (자식 오브젝트에서 검색하여 효율성 향상)
+            pool = GetComponentInChildren<PoolManager>();
+            spawner = GetComponentInChildren<EnemySpawner>();
+            upgrade = GetComponentInChildren<UpgradeManager>();
+            audioMgr = GetComponentInChildren<AudioManager>();
+            database = GetComponentInChildren<DatabaseManager>();
+
+            // 플레이어는 일반적으로 자식이 아닌 씬 최상위에 있으므로 전체 검색 유지
+            player = FindFirstObjectByType<Player>();
         }
 
         private void Start()
@@ -184,13 +195,29 @@ private void Awake()
         /// <summary>
         /// 종료
         /// </summary>
-        public void QuitGame()
+        public async void QuitGame()
         {
+            // 종료 전 데이터베이스에 시간 저장
+            if (database != null)
+            {
+                await database.SaveLastPlayTimeAsync();
+            }
+
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
+        }
+
+        private void OnApplicationQuit()
+        {
+            // 종료 버튼을 누르지 않고 창을 닫았을 때를 위한 백업 저장
+            // 비동기 메서드를 동기식으로 기다립니다 (종료 시점이므로 허용됨)
+            if (database != null)
+            {
+                database.SaveLastPlayTimeAsync().GetAwaiter().GetResult();
+            }
         }
     }
 }

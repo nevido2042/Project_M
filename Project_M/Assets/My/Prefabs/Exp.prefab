@@ -155,4 +155,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e6e492611749ad448907b4f2837391f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Hero.ItemLifetime
-  lifeTime: 3
+  lifeTime: 15
