@@ -63,6 +63,13 @@ namespace Hero
                 input.enabled = false;
             }
 
+            // 무기 비활성화
+            var player = GetComponent<Player>();
+            if (player != null)
+            {
+                player.DeactivateWeapons();
+            }
+
             // 물리적 속도 즉시 정지
             var rb = GetComponent<Rigidbody2D>();
             if (rb != null)

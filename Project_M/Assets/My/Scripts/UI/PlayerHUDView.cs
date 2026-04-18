@@ -24,7 +24,7 @@ namespace Hero
             content.SetActive(false);
 
             // 게임 상태 이벤트 구독
-            if (GameManager.Instance != null)
+            if (GameManager.HasInstance)
             {
                 GameManager.Instance.OnGameStart += Show;
                 GameManager.Instance.OnGameOver += Hide;
@@ -36,7 +36,7 @@ namespace Hero
 
         private void OnDestroy()
         {
-            if (GameManager.Instance != null)
+            if (GameManager.HasInstance)
             {
                 GameManager.Instance.OnGameStart -= Show;
                 GameManager.Instance.OnGameOver -= Hide;

@@ -23,6 +23,11 @@ namespace Hero
         private IObjectPool<ExperienceItem> expPool;
         private IObjectPool<Bullet> bulletPool;
 
+        /// <summary>
+        /// 모든 오브젝트 풀이 초기화되었는지 여부
+        /// </summary>
+        public bool IsInitialized => enemyPool != null;
+
         private void Awake()
         {
             // 유니티 공식 ObjectPool 초기화

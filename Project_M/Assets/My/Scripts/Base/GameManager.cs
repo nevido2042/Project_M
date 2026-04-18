@@ -19,6 +19,13 @@ namespace Hero
                 if (instance == null)
                 {
                     instance = UnityEngine.Object.FindAnyObjectByType<GameManager>();
+                    
+                    // 씬 전환 중이거나 앱 종료 시에는 에러 로그를 출력하지 않음
+                    if (instance == null && !Application.isPlaying)
+                    {
+                        return null;
+                    }
+                    
                     if (instance == null)
                     {
                         Debug.LogError("씬에 GameManager가 존재하지 않습니다!");
@@ -27,6 +34,8 @@ namespace Hero
                 return instance;
             }
         }
+
+        public static bool HasInstance => instance != null;
 
         [Header("핵심 시스템 참조 (자동 할당)")]
         private PoolManager pool;
@@ -68,6 +77,7 @@ namespace Hero
 
         private void Awake()
         {
+            // 싱글톤 인스턴스 설정 (씬마다 새로 생성되도록 DontDestroyOnLoad 제거)
             if (instance != null && instance != this)
             {
                 Destroy(gameObject);
@@ -75,6 +85,19 @@ namespace Hero
             }
             instance = this;
 
+            InitSystems();
+        }
+
+        private void OnDestroy()
+        {
+            if (instance == this)
+            {
+                instance = null;
+            }
+        }
+
+        private void InitSystems()
+        {
             // 핵심 매니저 시스템 자동 할당 (자식 오브젝트에서 검색하여 효율성 향상)
             pool = GetComponentInChildren<PoolManager>();
             spawner = GetComponentInChildren<EnemySpawner>();
@@ -164,7 +187,20 @@ namespace Hero
         { 
             yield return new WaitForSecondsRealtime(1.0f);
 
-            Time.timeScale = 0f;
+            // 1. 스포너 중단 및 자식 몬스터 정지
+            if (spawner != null)
+            {
+                spawner.enabled = false;
+
+                // 스포너 하위에 있는 몬스터들만 효율적으로 찾아 정지시킵니다.
+                Enemy[] allEnemies = spawner.GetComponentsInChildren<Enemy>();
+                Debug.Log($"[Game] 정지시킬 몬스터 개수: {allEnemies.Length}");
+
+                foreach (Enemy enemy in allEnemies)
+                {
+                    enemy.StopAction();
+                }
+            }
 
             // 패배 효과음 재생 및 배경음 정지
             if (audioMgr != null)

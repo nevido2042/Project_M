@@ -17,14 +17,36 @@ namespace Hero
         public int KillCount { get; private set; }
         public event Action<int> OnKillCountChanged;
 
-        private void Start()
+        private Coroutine spawnCoroutine;
+
+        private void OnEnable()
         {
-            // 스폰 코루틴 시작
-            StartCoroutine(SpawnRoutine());
+            // 컴포넌트가 활성화될 때 스폰 코루틴 시작
+            if (spawnCoroutine == null)
+            {
+                spawnCoroutine = StartCoroutine(SpawnRoutine());
+            }
+        }
+
+        private void OnDisable()
+        {
+            // 컴포넌트가 비활성화될 때(GameOver 등) 코루틴 중단
+            if (spawnCoroutine != null)
+            {
+                StopCoroutine(spawnCoroutine);
+                spawnCoroutine = null;
+            }
         }
 
         private IEnumerator SpawnRoutine()
         {
+            // [개선] PoolManager가 완전히 초기화될 때까지 대기 (가장 안전한 방법)
+            yield return new WaitUntil(() => 
+                GameManager.Instance != null && 
+                GameManager.Instance.Pool != null && 
+                GameManager.Instance.Pool.IsInitialized
+            );
+
             // 게임 내내 반복
             while (true)
             {
@@ -46,6 +68,9 @@ namespace Hero
             
             Enemy enemy = GameManager.Instance.Pool.GetEnemy();
             if (enemy == null) return;
+
+            // 몬스터의 부모를 스포너로 설정 (GameOver 시 GetComponentsInChildren으로 찾기 위함)
+            enemy.transform.SetParent(this.transform);
 
             // 2. 랜덤한 방향 및 거리 계산 (원형 좌표계 활용)
             float angle = UnityEngine.Random.Range(0f, 360f);

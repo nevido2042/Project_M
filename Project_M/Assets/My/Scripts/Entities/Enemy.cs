@@ -83,6 +83,33 @@ namespace Hero
         }
 
         /// <summary>
+        /// 모든 동작을 중지합니다 (게임 오버 시 호출)
+        /// </summary>
+        public void StopAction()
+        {
+            if (move != null)
+            {
+                move.Velocity = Vector2.zero;
+                move.enabled = false;
+            }
+            if (chase != null) chase.enabled = false;
+            
+            // 물리 연산 고정 (튕김 방지 및 위치 고정)
+            var rb = GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.linearVelocity = Vector2.zero;
+                rb.angularVelocity = 0;
+                rb.bodyType = RigidbodyType2D.Static; 
+            }
+
+            // 애니메이터 정지
+            if (anim != null) anim.speed = 0;
+
+            Debug.Log($"[{gameObject.name}] StopAction 실행됨");
+        }
+
+        /// <summary>
         /// 풀로 반납합니다 (IPoolable 인터페이스 구현)
         /// </summary>
         public void Release()

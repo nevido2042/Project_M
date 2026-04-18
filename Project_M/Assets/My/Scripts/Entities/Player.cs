@@ -13,10 +13,10 @@ namespace Hero
         [SerializeField] private float currentExp = 0;
         [SerializeField] private float nextExp = 100f; // 목표 경험치
 
-        [Header("무기 설정")]
-        [SerializeField] private RangedWeapon rangedWeapon;
-
+        // 핵심 컴포넌트 참조
         private PlayerHealth health;
+        private RangedWeapon rangedWeapon;
+        private MeleeWeapon meleeWeapon;
 
         // UI 및 상태 업데이트를 위한 이벤트 정의
         public event Action<float, float> OnExpChanged;    // (current, next)
@@ -41,6 +41,10 @@ namespace Hero
         private void Awake()
         {
             health = GetComponent<PlayerHealth>();
+            
+            // 무기 시스템 자동 검색 및 할당
+            rangedWeapon = GetComponentInChildren<RangedWeapon>();
+            meleeWeapon = GetComponentInChildren<MeleeWeapon>();
             
             // 초기 상태 알림
             OnExpChanged?.Invoke(currentExp, nextExp);
@@ -82,6 +86,22 @@ namespace Hero
 
             Debug.Log($"레벨업! 현재 레벨: {level}, 다음 목표: {nextExp}");
             OnLevelChanged?.Invoke(level);
+        }
+
+        /// <summary>
+        /// 모든 무기 컴포넌트를 비활성화합니다.
+        /// </summary>
+        public void DeactivateWeapons()
+        {
+            if (rangedWeapon != null)
+            {
+                rangedWeapon.gameObject.SetActive(false);
+            }
+
+            if (meleeWeapon != null)
+            {
+                meleeWeapon.gameObject.SetActive(false);
+            }
         }
 
         private void OnDestroy()
