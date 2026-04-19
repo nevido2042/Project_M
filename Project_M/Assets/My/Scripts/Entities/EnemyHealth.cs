@@ -10,70 +10,70 @@ namespace Hero
     public class EnemyHealth : HealthBase
     {
         [Header("몬스터 데이터")]
-        [SerializeField] private EnemyData data;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("data")] private EnemyData m_Data;
 
-        private Enemy enemy;
-        private Animator anim;
-        private Collider2D enemyCollider;
-        private Move move;
-        private Chase chase;
-        private bool isDead = false;
+        private Enemy m_Enemy;
+        private Animator m_Anim;
+        private Collider2D m_EnemyCollider;
+        private Move m_Move;
+        private Chase m_Chase;
+        private bool m_IsDead = false;
 
-        public bool IsDead => isDead;
-        public override bool IsInvincible => isDead;
+        public bool IsDead => m_IsDead;
+        public override bool IsInvincible => m_IsDead;
 
         protected override void Awake()
         {
-            if (data != null)
+            if (m_Data != null)
             {
-                maxHealth = data.MaxHealth;
+                m_MaxHealth = m_Data.MaxHealth;
             }
             base.Awake();
 
-            enemy = GetComponent<Enemy>();
-            anim = GetComponent<Animator>();
-            enemyCollider = GetComponent<Collider2D>();
-            move = GetComponent<Move>();
-            chase = GetComponent<Chase>();
+            m_Enemy = GetComponent<Enemy>();
+            m_Anim = GetComponent<Animator>();
+            m_EnemyCollider = GetComponent<Collider2D>();
+            m_Move = GetComponent<Move>();
+            m_Chase = GetComponent<Chase>();
         }
 
         private void OnEnable()
         {
             // 풀에서 재활용될 때 체력 회복
-            if (data != null)
+            if (m_Data != null)
             {
-                maxHealth = data.MaxHealth;
-                currentHealth = maxHealth;
+                m_MaxHealth = m_Data.MaxHealth;
+                m_CurrentHealth = m_MaxHealth;
             }
-            isDead = false;
+            m_IsDead = false;
         }
 
         public override void Die()
         {
-            if (isDead) return;
+            if (m_IsDead) return;
             base.Die(); // 사운드 및 OnDeath 호출
             StartCoroutine(DieRoutine());
         }
 
         private IEnumerator DieRoutine()
         {
-            isDead = true;
+            m_IsDead = true;
 
             // 컴포넌트 비활성화
-            if (enemyCollider != null) enemyCollider.enabled = false;
-            if (move != null)
+            if (m_EnemyCollider != null) m_EnemyCollider.enabled = false;
+            if (m_Move != null)
             {
-                move.Velocity = Vector2.zero;
-                move.enabled = false;
+                m_Move.Velocity = Vector2.zero;
+                m_Move.enabled = false;
             }
-            if (chase != null) chase.enabled = false;
+            if (m_Chase != null) m_Chase.enabled = false;
 
             // 즉시 속도 정지
             Rigidbody2D rb = GetComponent<Rigidbody2D>();
             if (rb != null) rb.linearVelocity = Vector2.zero;
 
             // 사망 애니메이션
-            if (anim != null) anim.SetBool("Dead", true);
+            if (m_Anim != null) m_Anim.SetBool("Dead", true);
 
             // 킬 수 증가
             if (GameManager.Instance != null && GameManager.Instance.Spawner != null)
@@ -101,17 +101,17 @@ namespace Hero
             base.TakeDamage(data);
 
             // 피격 애니메이션 트리거 발동
-            if (!isDead && anim != null)
+            if (!m_IsDead && m_Anim != null)
             {
-                anim.SetTrigger("Hit");
+                m_Anim.SetTrigger("Hit");
             }
         }
 
         public void Release()
         {
-            if (enemy != null)
+            if (m_Enemy != null)
             {
-                enemy.Release();
+                m_Enemy.Release();
             }
             else
             {

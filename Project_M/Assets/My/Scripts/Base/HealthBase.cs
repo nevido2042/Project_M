@@ -9,20 +9,20 @@ namespace Hero
     public abstract class HealthBase : MonoBehaviour
     {
         [Header("체력 설정 (Base)")]
-        [SerializeField] protected float maxHealth = 100f;
-        protected float currentHealth;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("maxHealth")] protected float m_MaxHealth = 100f;
+        protected float m_CurrentHealth;
 
         public event Action OnDeath;
         public event Action<DamageData> OnDamaged;
         public event Action<float, float> OnHealthChanged; // 체력 변경 이벤트 추가 (current, max)
 
-        public float CurrentHealth => currentHealth;
-        public float MaxHealth => maxHealth;
+        public float CurrentHealth => m_CurrentHealth;
+        public float MaxHealth => m_MaxHealth;
         public abstract bool IsInvincible { get; }
 
         protected virtual void Awake()
         {
-            currentHealth = maxHealth;
+            m_CurrentHealth = m_MaxHealth;
             InvokeHealthChanged();
         }
 
@@ -31,7 +31,7 @@ namespace Hero
         /// </summary>
         protected void InvokeHealthChanged()
         {
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            OnHealthChanged?.Invoke(m_CurrentHealth, m_MaxHealth);
         }
 
         /// <summary>
@@ -39,9 +39,9 @@ namespace Hero
         /// </summary>
         public virtual void TakeDamage(DamageData data)
         {
-            if (IsInvincible || currentHealth <= 0) return;
+            if (IsInvincible || m_CurrentHealth <= 0) return;
 
-            currentHealth -= data.damage;
+            m_CurrentHealth -= data.damage;
 
             // 공통 사운드 효과
             if (GameManager.Instance?.Audio != null)
@@ -51,7 +51,7 @@ namespace Hero
             OnDamaged?.Invoke(data);
             InvokeHealthChanged();
 
-            if (currentHealth <= 0)
+            if (m_CurrentHealth <= 0)
             {
                 Die();
             }
@@ -74,9 +74,9 @@ namespace Hero
         /// </summary>
         public virtual void Heal(float amount)
         {
-            if (currentHealth <= 0) return;
-            currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            if (m_CurrentHealth <= 0) return;
+            m_CurrentHealth = Mathf.Min(m_CurrentHealth + amount, m_MaxHealth);
+            OnHealthChanged?.Invoke(m_CurrentHealth, m_MaxHealth);
         }
     }
 }

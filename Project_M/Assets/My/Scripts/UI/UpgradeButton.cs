@@ -10,31 +10,31 @@ namespace Hero
     public class UpgradeButton : MonoBehaviour
     {
         [Header("UI 참조")]
-        [SerializeField] private Image iconImage;
-        [SerializeField] private TextMeshProUGUI nameText;
-        [SerializeField] private TextMeshProUGUI descriptionText;
-        [SerializeField] private TextMeshProUGUI levelText;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("iconImage")] private Image m_IconImage;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("nameText")] private TextMeshProUGUI m_NameText;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("descriptionText")] private TextMeshProUGUI m_DescriptionText;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("levelText")] private TextMeshProUGUI m_LevelText;
 
-        private UpgradeData upgradeData;
-        private System.Action<UpgradeData> onSelected;
+        private UpgradeData m_UpgradeData;
+        private System.Action<UpgradeData> m_OnSelected;
 
         /// <summary>
         /// 버튼에 강화 데이터를 주입하고 UI를 갱신합니다.
         /// </summary>
         public void SetUpgrade(UpgradeData data, System.Action<UpgradeData> callback)
         {
-            upgradeData = data;
-            onSelected = callback;
+            m_UpgradeData = data;
+            m_OnSelected = callback;
 
-            if (iconImage != null) iconImage.sprite = data.icon;
-            if (nameText != null) nameText.text = data.upgradeName;
-            if (descriptionText != null) descriptionText.text = data.description;
-            if (levelText != null) levelText.text = $"Lv.{data.currentLevel + 1}";
+            if (m_IconImage != null) m_IconImage.sprite = data.icon;
+            if (m_NameText != null) m_NameText.text = data.upgradeName;
+            if (m_DescriptionText != null) m_DescriptionText.text = data.description;
+            if (m_LevelText != null) m_LevelText.text = $"Lv.{data.currentLevel + 1}";
             
             // 만약 최대 레벨이라면 레벨 텍스트를 MAX로 변경하는 디테일 추가
             if (data.currentLevel >= data.maxLevel)
             {
-                if (levelText != null) levelText.text = "MAX";
+                if (m_LevelText != null) m_LevelText.text = "MAX";
             }
         }
 
@@ -43,9 +43,9 @@ namespace Hero
         /// </summary>
         public void OnClick()
         {
-            if (upgradeData != null)
+            if (m_UpgradeData != null)
             {
-                onSelected?.Invoke(upgradeData);
+                m_OnSelected?.Invoke(m_UpgradeData);
             }
         }
     }

@@ -9,22 +9,22 @@ namespace Hero
     [RequireComponent(typeof(Rigidbody2D))]
     public class Flip : MonoBehaviour
     {
-        private SpriteRenderer spriteRenderer;
-        private Rigidbody2D rb;
+        private SpriteRenderer m_SpriteRenderer;
+        private Rigidbody2D m_Rb;
 
         private void Awake()
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            rb = GetComponent<Rigidbody2D>();
+            m_SpriteRenderer = GetComponent<SpriteRenderer>();
+            m_Rb = GetComponent<Rigidbody2D>();
         }
 
         private void LateUpdate()
         {
             // 물리 연산이 끝난 후(LateUpdate) 속도를 체크하여 방향을 결정합니다.
             // 속도가 0이 아닐 때만 방향을 업데이트하여 정지 시 마지막 방향을 유지합니다.
-            if (rb != null && rb.linearVelocity.x != 0)
+            if (m_Rb != null && m_Rb.linearVelocity.x != 0)
             {
-                spriteRenderer.flipX = rb.linearVelocity.x < 0;
+                m_SpriteRenderer.flipX = m_Rb.linearVelocity.x < 0;
             }
         }
     }

@@ -10,18 +10,18 @@ namespace Hero
     public abstract class KnockBackBase : MonoBehaviour
     {
         [Header("기본 넉백 설정")]
-        [SerializeField] protected float defaultForce = 5f;
-        [SerializeField] protected float defaultDuration = 0.2f;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("defaultForce")] protected float m_DefaultForce = 5f;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("defaultDuration")] protected float m_DefaultDuration = 0.2f;
 
-        protected Rigidbody2D rb;
-        protected Move move;
-        protected Flip flip; // Flip 컴포넌트 참조 추가
+        protected Rigidbody2D m_Rb;
+        protected Move m_Move;
+        protected Flip m_Flip; // Flip 컴포넌트 참조 추가
 
         protected virtual void Awake()
         {
-            rb = GetComponent<Rigidbody2D>();
-            move = GetComponent<Move>();
-            flip = GetComponent<Flip>();
+            m_Rb = GetComponent<Rigidbody2D>();
+            m_Move = GetComponent<Move>();
+            m_Flip = GetComponent<Flip>();
         }
 
         protected virtual void OnEnable()
@@ -69,7 +69,7 @@ namespace Hero
 
         public virtual void ApplyKnockBack(Vector2 direction)
         {
-            ApplyKnockBack(direction, defaultForce, defaultDuration);
+            ApplyKnockBack(direction, m_DefaultForce, m_DefaultDuration);
         }
 
         public virtual void ApplyKnockBack(Vector2 direction, float force, float duration)
@@ -85,18 +85,18 @@ namespace Hero
             OnKnockBackStart();
 
             // 넉백 동안 Flip 및 Move 비활성화
-            if (flip != null) flip.enabled = false;
-            if (move != null) move.enabled = false;
+            if (m_Flip != null) m_Flip.enabled = false;
+            if (m_Move != null) m_Move.enabled = false;
 
-            rb.linearVelocity = direction.normalized * force;
+            m_Rb.linearVelocity = direction.normalized * force;
 
             yield return new WaitForSeconds(duration);
 
-            rb.linearVelocity = Vector2.zero;
+            m_Rb.linearVelocity = Vector2.zero;
 
             // 다시 활성화
-            if (move != null) move.enabled = true;
-            if (flip != null) flip.enabled = true;
+            if (m_Move != null) m_Move.enabled = true;
+            if (m_Flip != null) m_Flip.enabled = true;
 
             OnKnockBackEnd();
         }

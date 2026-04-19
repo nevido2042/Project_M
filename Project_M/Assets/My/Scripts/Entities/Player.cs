@@ -9,46 +9,46 @@ namespace Hero
     public class Player : MonoBehaviour
     {
         [Header("경험치 및 레벨 설정")]
-        [SerializeField] private int level = 1;
-        [SerializeField] private float currentExp = 0;
-        [SerializeField] private float nextExp = 100f; // 목표 경험치
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("level")] private int m_Level = 1;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("currentExp")] private float m_CurrentExp = 0;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("nextExp")] private float m_NextExp = 100f; // 목표 경험치
 
         // 핵심 컴포넌트 참조
-        private PlayerHealth health;
-        private RangedWeapon rangedWeapon;
-        private MeleeWeapon meleeWeapon;
+        private PlayerHealth m_Health;
+        private RangedWeapon m_RangedWeapon;
+        private MeleeWeapon m_MeleeWeapon;
 
         // UI 및 상태 업데이트를 위한 이벤트 정의
         public event Action<float, float> OnExpChanged;    // (current, next)
         public event Action<int> OnLevelChanged;          // (level)
 
         // 체력 정보 프로퍼티 (기존 호환성을 유지하기 위해 PlayerHealth에서 가져옴)
-        public float CurrentHealth => health != null ? health.CurrentHealth : 0f;
-        public float MaxHealth => health != null ? health.MaxHealth : 0f;
-        public bool IsInvincible => health != null ? health.IsInvincible : false;
+        public float CurrentHealth => m_Health != null ? m_Health.CurrentHealth : 0f;
+        public float MaxHealth => m_Health != null ? m_Health.MaxHealth : 0f;
+        public bool IsInvincible => m_Health != null ? m_Health.IsInvincible : false;
 
         public event Action<float, float> OnHealthChanged
         {
-            add => health.OnHealthChanged += value;
-            remove => health.OnHealthChanged -= value;
+            add => m_Health.OnHealthChanged += value;
+            remove => m_Health.OnHealthChanged -= value;
         }
 
         // 경험치 정보 프로퍼티
-        public float CurrentExp => currentExp;
-        public float NextExp => nextExp;
-        public int Level => level;
+        public float CurrentExp => m_CurrentExp;
+        public float NextExp => m_NextExp;
+        public int Level => m_Level;
 
         private void Awake()
         {
-            health = GetComponent<PlayerHealth>();
+            m_Health = GetComponent<PlayerHealth>();
             
             // 무기 시스템 자동 검색 및 할당
-            rangedWeapon = GetComponentInChildren<RangedWeapon>();
-            meleeWeapon = GetComponentInChildren<MeleeWeapon>();
+            m_RangedWeapon = GetComponentInChildren<RangedWeapon>();
+            m_MeleeWeapon = GetComponentInChildren<MeleeWeapon>();
             
             // 초기 상태 알림
-            OnExpChanged?.Invoke(currentExp, nextExp);
-            OnLevelChanged?.Invoke(level);
+            OnExpChanged?.Invoke(m_CurrentExp, m_NextExp);
+            OnLevelChanged?.Invoke(m_Level);
         }
 
         private void Update()
@@ -62,15 +62,15 @@ namespace Hero
         /// <param name="amount">획득할 경험치 양</param>
         public void GetExp(float amount)
         {
-            currentExp += amount;
+            m_CurrentExp += amount;
 
             // 레벨업 조건 체크
-            while (currentExp >= nextExp)
+            while (m_CurrentExp >= m_NextExp)
             {
                 LevelUp();
             }
 
-            OnExpChanged?.Invoke(currentExp, nextExp);
+            OnExpChanged?.Invoke(m_CurrentExp, m_NextExp);
         }
 
         /// <summary>
@@ -78,14 +78,14 @@ namespace Hero
         /// </summary>
         private void LevelUp()
         {
-            currentExp -= nextExp;
-            level++;
+            m_CurrentExp -= m_NextExp;
+            m_Level++;
 
             // 레벨업 처리에 따른 목표 경험치 증가 (예: 20% 증가)
-            nextExp = Mathf.Round(nextExp * 1.2f);
+            m_NextExp = Mathf.Round(m_NextExp * 1.2f);
 
-            Debug.Log($"레벨업! 현재 레벨: {level}, 다음 목표: {nextExp}");
-            OnLevelChanged?.Invoke(level);
+            Debug.Log($"레벨업! 현재 레벨: {m_Level}, 다음 목표: {m_NextExp}");
+            OnLevelChanged?.Invoke(m_Level);
         }
 
         /// <summary>
@@ -93,14 +93,14 @@ namespace Hero
         /// </summary>
         public void DeactivateWeapons()
         {
-            if (rangedWeapon != null)
+            if (m_RangedWeapon != null)
             {
-                rangedWeapon.gameObject.SetActive(false);
+                m_RangedWeapon.gameObject.SetActive(false);
             }
 
-            if (meleeWeapon != null)
+            if (m_MeleeWeapon != null)
             {
-                meleeWeapon.gameObject.SetActive(false);
+                m_MeleeWeapon.gameObject.SetActive(false);
             }
         }
 

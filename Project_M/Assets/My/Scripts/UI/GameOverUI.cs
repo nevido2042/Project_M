@@ -7,18 +7,18 @@ namespace Hero
     /// </summary>
     public class GameOverUI : MonoBehaviour
     {
-        [SerializeField] private GameObject content;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("content")] private GameObject m_Content;
 
         private void Start()
         {
-            if (content == null)
+            if (m_Content == null)
             {
                 Debug.LogWarning($"[{nameof(GameOverUI)}] Content(Panel)가 할당되지 않았습니다! {gameObject.name}에서 작동하지 않습니다.");
                 return;
             }
 
             // 초기 상태: 숨김
-            content.SetActive(false);
+            m_Content.SetActive(false);
 
             if (GameManager.Instance != null)
             {
@@ -27,8 +27,8 @@ namespace Hero
             }
         }
 
-        private void Show() { if (content != null) content.SetActive(true); }
-        private void Hide() { if (content != null) content.SetActive(false); }
+        private void Show() { if (m_Content != null) m_Content.SetActive(true); }
+        private void Hide() { if (m_Content != null) m_Content.SetActive(false); }
 
         /// <summary>
         /// [다시 하기] 버튼 등에 연결

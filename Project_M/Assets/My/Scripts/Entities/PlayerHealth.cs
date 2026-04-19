@@ -10,26 +10,26 @@ namespace Hero
     public class PlayerHealth : HealthBase
     {
         [Header("플레이어 특화 설정")]
-        [SerializeField] private float invincibilityDuration = 0.5f;
-        private bool isInvincible = false;
-        private Animator animator;
+        [SerializeField, UnityEngine.Serialization.FormerlySerializedAs("invincibilityDuration")] private float m_InvincibilityDuration = 0.5f;
+        private bool m_IsInvincible = false;
+        private Animator m_Animator;
 
 
-        public override bool IsInvincible => isInvincible;
+        public override bool IsInvincible => m_IsInvincible;
 
         protected override void Awake()
         {
             base.Awake();
-            animator = GetComponent<Animator>();
+            m_Animator = GetComponent<Animator>();
         }
 
         public override void TakeDamage(DamageData data)
         {
-            if (isInvincible || currentHealth <= 0) return;
+            if (m_IsInvincible || m_CurrentHealth <= 0) return;
 
             base.TakeDamage(data);
 
-            if (currentHealth > 0)
+            if (m_CurrentHealth > 0)
             {
                 StartCoroutine(InvincibilityRoutine());
             }
@@ -37,16 +37,16 @@ namespace Hero
 
         private IEnumerator InvincibilityRoutine()
         {
-            isInvincible = true;
-            yield return new WaitForSeconds(invincibilityDuration);
-            isInvincible = false;
+            m_IsInvincible = true;
+            yield return new WaitForSeconds(m_InvincibilityDuration);
+            m_IsInvincible = false;
         }
 
         public override void Die()
         {
-            if (animator != null)
+            if (m_Animator != null)
             {
-                animator.SetBool("Dead", true);
+                m_Animator.SetBool("Dead", true);
             }
             
             // 이동 및 입력 비활성화
